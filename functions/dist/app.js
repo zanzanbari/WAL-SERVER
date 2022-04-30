@@ -69,9 +69,10 @@ app.use("*", (req, res) => {
         message: err.message
     });
 });
-exports.api = functions.runWith({
+exports.api = functions
+    .runWith({
     timeoutSeconds: 300,
-    memory: "512MB",
+    memory: "512MB"
 })
     .region("asia-northeast3")
     .https.onRequest(app);

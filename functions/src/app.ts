@@ -51,11 +51,10 @@ app.use("*", (req, res) => {
 });
 
 
-export const api = functions.runWith({
-    timeoutSeconds: 300,
-    memory: "512MB",
-})
-.region("asia-northeast3")
-.https.onRequest(app);
-
-
+export const api = functions
+    .runWith({
+        timeoutSeconds: 300,
+        memory: "512MB"
+    })
+    .region("asia-northeast3")
+    .https.onRequest(app);
