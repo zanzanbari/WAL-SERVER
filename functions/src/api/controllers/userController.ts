@@ -85,10 +85,10 @@ const getCategoryInfo = async (
 
     try {
 
-        const categories = await UserCategory.findCategoryByUserId(req.user?.id as number) as number[];
-        if (!categories) return ErrorResponse(res, sc.DB_ERROR, rm.DB_ERROR);
+        const dtype = await UserCategory.findCategoryByUserId(req.user?.id as number) as number[];
+        if (!dtype) return ErrorResponse(res, sc.DB_ERROR, rm.DB_ERROR);
 
-        const data = { categories } as UserInfoResponse;
+        const data = { dtype } as UserInfoResponse;
 
         SuccessResponse(res, sc.OK, rm.READ_USER_INFO_SUCCESS, data);
 
@@ -138,7 +138,8 @@ const resetTimeInfo = async (
     try {
 
         await Time.updateTime(userId, req.body as UserSetTime);
-        SuccessResponse(res, sc.OK, rm.UPDATE_USER_INFO_SUCCESS, userId);
+        const data = Time.findById(userId);
+        SuccessResponse(res, sc.OK, rm.UPDATE_USER_INFO_SUCCESS, await data);
 
     } catch (error) {
         logger.appLogger.log({ level: "error", message: error.message });

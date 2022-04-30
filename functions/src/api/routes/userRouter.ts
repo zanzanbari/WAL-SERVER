@@ -14,7 +14,7 @@ router.post(
 
 router
     .route("/info/nickname")
-    .get(userController.getNicknameInfo)
+    .get(authUtil.isAuth, userController.getNicknameInfo)
     .post(authUtil.isAuth, userController.resetNicknameInfo);
 
 router

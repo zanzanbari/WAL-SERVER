@@ -67,10 +67,10 @@ const getTimeInfo = (req, res, next) => __awaiter(void 0, void 0, void 0, functi
 const getCategoryInfo = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     var _d;
     try {
-        const categories = yield models_1.UserCategory.findCategoryByUserId((_d = req.user) === null || _d === void 0 ? void 0 : _d.id);
-        if (!categories)
+        const dtype = yield models_1.UserCategory.findCategoryByUserId((_d = req.user) === null || _d === void 0 ? void 0 : _d.id);
+        if (!dtype)
             return (0, apiResponse_1.ErrorResponse)(res, resultCode_1.default.DB_ERROR, resultMessage_1.default.DB_ERROR);
-        const data = { categories };
+        const data = { dtype };
         (0, apiResponse_1.SuccessResponse)(res, resultCode_1.default.OK, resultMessage_1.default.READ_USER_INFO_SUCCESS, data);
     }
     catch (error) {
@@ -101,7 +101,8 @@ const resetTimeInfo = (req, res, next) => __awaiter(void 0, void 0, void 0, func
     const userId = (_f = req.user) === null || _f === void 0 ? void 0 : _f.id;
     try {
         yield models_1.Time.updateTime(userId, req.body);
-        (0, apiResponse_1.SuccessResponse)(res, resultCode_1.default.OK, resultMessage_1.default.UPDATE_USER_INFO_SUCCESS, userId);
+        const data = models_1.Time.findById(userId);
+        (0, apiResponse_1.SuccessResponse)(res, resultCode_1.default.OK, resultMessage_1.default.UPDATE_USER_INFO_SUCCESS, yield data);
     }
     catch (error) {
         logger.appLogger.log({ level: "error", message: error.message });

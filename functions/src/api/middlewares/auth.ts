@@ -35,7 +35,8 @@ const isAuth = async (
         }
 
         const userId = accessTokenDecoded.id as number;
-        const user = await User.findOne({ where: { id: userId } });
+        const user = await User.findOne({ where: { id: userId } }) as User;
+        if (!user) return ErrorResponse(res, sc.BAD_REQUEST, rm.NO_USER);
 
         req.user = user as UserInfo;
         next();

@@ -38,6 +38,8 @@ const isAuth = (req, res, next) => __awaiter(void 0, void 0, void 0, function* (
         }
         const userId = accessTokenDecoded.id;
         const user = yield models_1.User.findOne({ where: { id: userId } });
+        if (!user)
+            return (0, apiResponse_1.ErrorResponse)(res, resultCode_1.default.BAD_REQUEST, resultMessage_1.default.NO_USER);
         req.user = user;
         next();
     }
