@@ -20,6 +20,6 @@ router
 router
     .route("/info/category")
     .get(auth_1.default.isAuth, userController_1.userController.getCategoryInfo)
-    .post(auth_1.default.isAuth, userController_1.userController.resetUserCategoryInfo);
+    .post(requestValidator_1.default.categoryRequestCheck, auth_1.default.isAuth, userController_1.userController.resetUserCategoryInfo);
 exports.default = router;
 //# sourceMappingURL=userRouter.js.map

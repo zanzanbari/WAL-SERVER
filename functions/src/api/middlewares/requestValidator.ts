@@ -4,7 +4,7 @@ import sc from "../../constant/resultCode";
 import rm from "../../constant/resultMessage";
 import { ErrorResponse } from "../../modules/apiResponse";
 import { SocialType, TokenDto } from "../../interface/dto/request/authRequest";
-import { UserSetTime, UserSettingDto } from "../../interface/dto/request/userRequest";
+import { ISetCategory, ISetTime, UserSettingDto } from "../../interface/dto/request/userRequest";
 const logger = require("../../api/middlewares/logger");
 
 // fcmtoken optional 로 한거 개맘에 안드는데,,, isLogin 따로 빼면 코드 중복 개쩔거같고,,, 고민
@@ -55,8 +55,17 @@ const initRequestCheck = async (
 
   const setInfoSchema = Joi.object().keys({
     nickname: Joi.string().required().max(10),
-    dtype: Joi.array().items(Joi.string()).required(),
-    time: Joi.array().items(Joi.string()).required()
+    dtype: {
+      joke: Joi.boolean().required(),
+      compliment: Joi.boolean().required(),
+      condolence: Joi.boolean().required(),
+      scolding: Joi.boolean().required(),
+    },
+    time: {
+      morning: Joi.boolean().required(),
+      afternoon: Joi.boolean().required(),
+      night: Joi.boolean().required(),
+    }
   });
 
   try {
@@ -66,7 +75,7 @@ const initRequestCheck = async (
       .catch(err => { return err; });
 
     if (bodyError.details) {
-      return ErrorResponse(res, sc.BAD_REQUEST, rm.WRONG_PARAMS_OR_NULL);
+      return ErrorResponse(res, sc.BAD_REQUEST, rm.WRONG_BODY_OR_NULL);
     }
 
     next();
@@ -96,11 +105,11 @@ const timeRequestCheck = async (
   try {
 
     const bodyError = await timeSchema
-      .validateAsync(req.body as UserSetTime)
+      .validateAsync(req.body as ISetTime)
       .catch(err => { return err; });
 
     if (bodyError.details) {
-      return ErrorResponse(res, sc.BAD_REQUEST, rm.WRONG_PARAMS_OR_NULL);
+      return ErrorResponse(res, sc.BAD_REQUEST, rm.WRONG_BODY_OR_NULL);
     }
 
     next();
@@ -114,11 +123,56 @@ const timeRequestCheck = async (
 }
 
 
+const categoryRequestCheck = async(
+  req: Request, 
+  res: Response, 
+  next: NextFunction
+) => {
+
+  const categorySchema = Joi.object().keys({
+    data: Joi
+      .array()
+      .length(2)
+      .items({
+        joke: Joi.boolean().required(),
+        compliment: Joi.boolean().required(),
+        condolence: Joi.boolean().required(),
+        scolding: Joi.boolean().required(),
+      }, {
+        joke: Joi.boolean().required(),
+        compliment: Joi.boolean().required(),
+        condolence: Joi.boolean().required(),
+        scolding: Joi.boolean().required(),
+      })
+  });
+
+  try {
+
+    const bodyError = await categorySchema
+      .validateAsync(req.body as ISetCategory)
+      .catch(err => { return err });
+    console.log("🚀", bodyError);
+      if (bodyError.details) {
+        return ErrorResponse(res, sc.BAD_REQUEST, rm.WRONG_BODY_OR_NULL);
+      }
+
+      next();
+
+  } catch(error) {
+    console.error(`[VALIDATE ERROR] [${req.method.toUpperCase()}] ${req.originalUrl}`);
+    logger.appLogger.log({ level: "error", message: error.message}); 
+    ErrorResponse(res, sc.INTERNAL_SERVER_ERROR, rm.INTERNAL_SERVER_ERROR); 
+  }
+
+}
+
+
 
 const validateUtil = {
   loginRequestCheck,
   initRequestCheck,
-  timeRequestCheck
+  timeRequestCheck,
+  categoryRequestCheck
 }
 
 export default validateUtil;

@@ -28,7 +28,9 @@ router
 router
     .route("/info/category")
     .get(authUtil.isAuth, userController.getCategoryInfo)
-    .post(authUtil.isAuth, userController.resetUserCategoryInfo);
+    .post(validateUtil.categoryRequestCheck, 
+        authUtil.isAuth, 
+        userController.resetUserCategoryInfo);
 
 
 export default router;

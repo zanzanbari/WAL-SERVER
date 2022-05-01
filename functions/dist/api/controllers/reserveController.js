@@ -108,7 +108,7 @@ const postReservation = (req, res, next) => __awaiter(void 0, void 0, void 0, fu
     var _c, _d;
     try {
         const { content, hide, date, time } = req.body;
-        if (!content || hide == undefined || !date || !time) 
+        if (!content || hide == undefined || !date || !time)
             return (0, apiResponse_1.ErrorResponse)(res, resultCode_1.default.BAD_REQUEST, resultMessage_1.default.NULL_VALUE);
         const existingReservation = yield models_1.Reservation.findOne({
             where: {
@@ -125,6 +125,10 @@ const postReservation = (req, res, next) => __awaiter(void 0, void 0, void 0, fu
             content
         });
         const data = { postId: newReservation.id };
+        /**
+         * -----------------------------알림 보내는 기능 넣어야 한다 ---------------------------
+         *
+         */
         (0, apiResponse_1.SuccessResponse)(res, resultCode_1.default.OK, resultMessage_1.default.ADD_RESERVATION_SUCCESS, data);
     }
     catch (err) {

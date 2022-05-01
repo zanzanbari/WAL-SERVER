@@ -49,15 +49,24 @@ const loginRequestCheck = (req, res, next) => __awaiter(void 0, void 0, void 0, 
 const initRequestCheck = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const setInfoSchema = joi_1.default.object().keys({
         nickname: joi_1.default.string().required().max(10),
-        dtype: joi_1.default.array().items(joi_1.default.string()).required(),
-        time: joi_1.default.array().items(joi_1.default.string()).required()
+        dtype: {
+            joke: joi_1.default.boolean().required(),
+            compliment: joi_1.default.boolean().required(),
+            condolence: joi_1.default.boolean().required(),
+            scolding: joi_1.default.boolean().required(),
+        },
+        time: {
+            morning: joi_1.default.boolean().required(),
+            afternoon: joi_1.default.boolean().required(),
+            night: joi_1.default.boolean().required(),
+        }
     });
     try {
         const bodyError = yield setInfoSchema
             .validateAsync(req.body)
             .catch(err => { return err; });
         if (bodyError.details) {
-            return (0, apiResponse_1.ErrorResponse)(res, resultCode_1.default.BAD_REQUEST, resultMessage_1.default.WRONG_PARAMS_OR_NULL);
+            return (0, apiResponse_1.ErrorResponse)(res, resultCode_1.default.BAD_REQUEST, resultMessage_1.default.WRONG_BODY_OR_NULL);
         }
         next();
     }
@@ -78,7 +87,40 @@ const timeRequestCheck = (req, res, next) => __awaiter(void 0, void 0, void 0, f
             .validateAsync(req.body)
             .catch(err => { return err; });
         if (bodyError.details) {
-            return (0, apiResponse_1.ErrorResponse)(res, resultCode_1.default.BAD_REQUEST, resultMessage_1.default.WRONG_PARAMS_OR_NULL);
+            return (0, apiResponse_1.ErrorResponse)(res, resultCode_1.default.BAD_REQUEST, resultMessage_1.default.WRONG_BODY_OR_NULL);
+        }
+        next();
+    }
+    catch (error) {
+        console.error(`[VALIDATE ERROR] [${req.method.toUpperCase()}] ${req.originalUrl}`);
+        logger.appLogger.log({ level: "error", message: error.message });
+        (0, apiResponse_1.ErrorResponse)(res, resultCode_1.default.INTERNAL_SERVER_ERROR, resultMessage_1.default.INTERNAL_SERVER_ERROR);
+    }
+});
+const categoryRequestCheck = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    const categorySchema = joi_1.default.object().keys({
+        data: joi_1.default
+            .array()
+            .length(2)
+            .items({
+            joke: joi_1.default.boolean().required(),
+            compliment: joi_1.default.boolean().required(),
+            condolence: joi_1.default.boolean().required(),
+            scolding: joi_1.default.boolean().required(),
+        }, {
+            joke: joi_1.default.boolean().required(),
+            compliment: joi_1.default.boolean().required(),
+            condolence: joi_1.default.boolean().required(),
+            scolding: joi_1.default.boolean().required(),
+        })
+    });
+    try {
+        const bodyError = yield categorySchema
+            .validateAsync(req.body)
+            .catch(err => { return err; });
+        console.log("🚀", bodyError);
+        if (bodyError.details) {
+            return (0, apiResponse_1.ErrorResponse)(res, resultCode_1.default.BAD_REQUEST, resultMessage_1.default.WRONG_BODY_OR_NULL);
         }
         next();
     }
@@ -91,7 +133,8 @@ const timeRequestCheck = (req, res, next) => __awaiter(void 0, void 0, void 0, f
 const validateUtil = {
     loginRequestCheck,
     initRequestCheck,
-    timeRequestCheck
+    timeRequestCheck,
+    categoryRequestCheck
 };
 exports.default = validateUtil;
 //# sourceMappingURL=requestValidator.js.map
