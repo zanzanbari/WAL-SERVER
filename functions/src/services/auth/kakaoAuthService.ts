@@ -1,12 +1,12 @@
 import { Service } from "typedi";
-import AuthService from "./authService";
+import IAuthService from "./authService";
 import { KakaoAuthApi, KakaoUnlinkApi } from "./client/kakaoApi";
 import { TokenDto } from "../../interface/dto/request/authRequest";
-import { AuthResponse, UserInfo } from "../../interface/dto/response/authResponse";
+import { AuthResponse } from "../../interface/dto/response/authResponse";
 import { issueAccessToken, issueRefreshToken } from "../../modules/tokenHandller";
 
 @Service()
-class KakaoAuthService implements AuthService {
+class KakaoAuthService implements IAuthService {
     // 주입해주고 싶다 
     constructor(
         private readonly userRepository: any,
