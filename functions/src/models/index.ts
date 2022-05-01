@@ -15,6 +15,11 @@ const sequelize = new Sequelize({
     dialect: "postgres",
     logging: false,
     timezone: "+09:00",
+    dialectOptions: {
+        charset: 'utf8mb4',
+        dateStrings: true,
+        typeCast: true
+    }
 });
 
 sequelize.addModels([
