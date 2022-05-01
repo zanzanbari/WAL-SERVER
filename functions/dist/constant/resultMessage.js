@@ -50,6 +50,14 @@ const ResultMessage = {
     TOKEN_INVALID: "토큰이 유효하지 않습니다.",
     TOKEN_EXPIRED_OR_INVALID: "토믄이 만료되었가나 유효하지 않습니다",
     TOKEN_EMPTY: "토큰이 없습니다.",
+    // 왈소리 맹글기
+    READ_RESERVED_DATE_SUCCESS: "예약날짜 조회 성공",
+    NO_RESERVATION_DATE: "예약날짜 없음",
+    ADD_RESERVATION_SUCCESS: "왈소리 맹글기 성공",
+    READ_RESERVATIONS_SUCCESS: "왈소리 히스토리 조회 성공",
+    NO_RESERVATION: "왈소리 히스토리가 없음",
+    DELETE_RESERVATION_SUCCESS: "왈소리 예약 취소 성공",
+    DELETE_COMPLETED_RESERVATION_SUCCESS: "왈소리 히스토리 삭제 성공",
 }; // as const;
 exports.default = ResultMessage;
 //# sourceMappingURL=resultMessage.js.map

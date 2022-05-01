@@ -42,6 +42,7 @@ export default class Reservation extends Model {
 
 
     @AllowNull(false)
+    @Default(Date.now())
     @Column(DataType.DATE)
     public reservedAt!: Date;
 
@@ -58,7 +59,7 @@ export default class Reservation extends Model {
     public completed!: Boolean;
 
 
-    @AllowNull(true)
+    @AllowNull(false)
     @Column(DataType.DATE)
     public sendingDate!: Date;
 
