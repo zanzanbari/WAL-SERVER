@@ -10,6 +10,7 @@ import Error from "../../constant/responseError";
 import ReserveService from "../../services/user/userService";
 const logger = require("../middlewares/logger");
 import dayjs from "dayjs";
+import sequelize from "../../models";
 
 const dayArr = ["(일)","(월)","(화)","(수)","(목)","(금)","(토)"];
 
@@ -19,8 +20,7 @@ const getHistoryDateMessage = (
     try {
 
         const monthDate = dayjs(rawDate).format("MM. DD") as string;
-        let time = dayjs(rawDate).format("H:mm") as string;
-        let hour = dayjs(rawDate)
+        let time = dayjs(rawDate).format(":mm") as string;
         
         if (dayjs(rawDate).hour() >= 12) {
             time = ` 오후 ${dayjs(rawDate).hour() - 12}` + time;
@@ -87,6 +87,7 @@ const getReservation = async (
             const historyMessage = getHistoryDateMessage(rawDate);
             const sendingDate = historyMessage?.monthDate + " " + historyMessage?.day + historyMessage?.time + " • 전송 예정"
             sendingData.push({
+                postId: item.id,
                 sendingDate,
                 content: item.getDataValue("content"),
                 reservedAt: dayjs(item.getDataValue("reservedAt")).format("YYYY. MM. DD"),
@@ -99,6 +100,7 @@ const getReservation = async (
             const historyMessage = getHistoryDateMessage(rawDate);
             const sendingDate = historyMessage?.monthDate + " " + historyMessage?.day + historyMessage?.time + " • 전송 완료"
             completeData.push({
+                postId: item.id,
                 sendingDate,
                 content: item.getDataValue("content"),
                 reservedAt: dayjs(item.getDataValue("reservedAt")).format("YYYY. MM. DD")
@@ -124,6 +126,39 @@ const postReservation = async (
 
     try {
         
+        const {
+            content,
+            hide,
+            date,
+            time
+        } = req.body;
+
+        if (!content || hide == undefined || !date || !time) return ErrorResponse(res, sc.BAD_REQUEST, rm.NULL_VALUE);
+
+        const existingReservation = await Reservation.findOne({
+            where: {
+                user_id: req.user?.id,
+                $and: sequelize.where(sequelize.fn('date', sequelize.col('sendingDate')), '=', new Date(date))
+            
+        }})
+
+        if (existingReservation) return ErrorResponse(res, sc.BAD_REQUEST, rm.INVALID_RESERVATION_DATE);
+
+     
+        const newReservation = await Reservation.create({
+            user_id: req.user?.id,
+            sendingDate: new Date(`${date} ${time}`),
+            hide,
+            content
+        });
+
+        const data = { postId: newReservation.id };
+
+        /**
+         * -----------------------------알림 보내는 기능 넣어야 한다 ---------------------------
+         * 
+         */
+        SuccessResponse(res, sc.OK, rm.ADD_RESERVATION_SUCCESS, data);
 
 
     } catch (err) {
@@ -183,7 +218,34 @@ const deleteReservation = async (
     next: NextFunction
 ) => {
 
+    const postId = req.params.postId;
+    if (postId == ":postId")
+        return ErrorResponse(res, sc.BAD_REQUEST, rm.WRONG_PARAMS_OR_NULL);
+
     try {
+
+        const waitingReservation = await Reservation.findOne({ 
+            where: { 
+                id: parseInt(postId),
+                user_id: req.user?.id,
+                completed: false
+            } 
+        });
+
+        if (!waitingReservation)
+            return ErrorResponse(res, sc.NOT_FOUND, rm.NO_OR_COMPLETED_RESERVATION);
+        
+        /** 
+         * -------------------------------
+            schedule에서 해당 reservation 삭제!!!!!!!!!!!!!!!!!
+            -------------------------------
+        **/
+
+        await waitingReservation?.destroy();
+
+        const data = { postId: parseInt(postId) }
+        SuccessResponse(res, sc.OK, rm.DELETE_RESERVATION_SUCCESS, data);
+
 
     } catch (err) {
         logger.appLogger.log({ level: "error", message: err.message });
@@ -198,7 +260,27 @@ const deleteCompletedReservation = async (
     next: NextFunction
 ) => {
 
+    const postId = req.params.postId;
+    if (postId == ":postId")
+        return ErrorResponse(res, sc.BAD_REQUEST, rm.WRONG_PARAMS_OR_NULL);
+
     try {
+
+        const completedReservation = await Reservation.findOne({ 
+            where: { 
+                id: parseInt(postId),
+                user_id: req.user?.id,
+                completed: true
+            } 
+        });
+
+        if (!completedReservation)
+            return ErrorResponse(res, sc.NOT_FOUND, rm.NO_OR_UNCOMPLETED_RESERVATION);
+        
+        await completedReservation?.destroy();
+
+        const data = { postId: parseInt(postId) }
+        SuccessResponse(res, sc.OK, rm.DELETE_COMPLETED_RESERVATION_SUCCESS, data);
 
     } catch (err) {
         logger.appLogger.log({ level: "error", message: err.message });

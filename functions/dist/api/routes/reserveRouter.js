@@ -13,7 +13,7 @@ router
     .get(reserveController_1.reserveController.getReservation)
     .post(reserveController_1.reserveController.postReservation);
 router.get('/datepicker', reserveController_1.reserveController.getReservedDate);
-router.post('/:postId', reserveController_1.reserveController.deleteReservation);
-router.post('/completed/:postId', reserveController_1.reserveController.deleteCompletedReservation);
+router.delete('/:postId', reserveController_1.reserveController.deleteReservation);
+router.delete('/completed/:postId', reserveController_1.reserveController.deleteCompletedReservation);
 exports.default = router;
 //# sourceMappingURL=reserveRouter.js.map

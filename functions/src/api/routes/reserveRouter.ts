@@ -13,8 +13,8 @@ router
 
 router.get('/datepicker', reserveController.getReservedDate);
 
-router.post('/:postId', reserveController.deleteReservation);
+router.delete('/:postId', reserveController.deleteReservation);
 
-router.post('/completed/:postId', reserveController.deleteCompletedReservation);
+router.delete('/completed/:postId', reserveController.deleteCompletedReservation);
 
 export default router;
