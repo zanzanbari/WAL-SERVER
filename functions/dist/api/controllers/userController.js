@@ -34,6 +34,8 @@ const setInfo = (req, res, next) => __awaiter(void 0, void 0, void 0, function* 
 });
 const getNicknameInfo = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     var _b;
+    if (!req.body.nickname)
+        return (0, apiResponse_1.ErrorResponse)(res, resultCode_1.default.BAD_REQUEST, resultMessage_1.default.WRONG_BODY_OR_NULL);
     try {
         const user = yield models_1.User.findById((_b = req.user) === null || _b === void 0 ? void 0 : _b.id);
         if (!user)
