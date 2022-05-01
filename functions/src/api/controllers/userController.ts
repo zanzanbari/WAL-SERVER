@@ -34,6 +34,8 @@ const getNicknameInfo = async (
     res: Response,
     next: NextFunction
 ) => {
+    
+    if (!req.body.nickname) return ErrorResponse(res, sc.BAD_REQUEST, rm.WRONG_BODY_OR_NULL);
 
     try {
 
