@@ -67,10 +67,8 @@ const getTimeInfo = (req, res, next) => __awaiter(void 0, void 0, void 0, functi
 const getCategoryInfo = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     var _d;
     try {
-        const dtype = yield models_1.UserCategory.findCategoryByUserId((_d = req.user) === null || _d === void 0 ? void 0 : _d.id);
-        if (!dtype)
-            return (0, apiResponse_1.ErrorResponse)(res, resultCode_1.default.DB_ERROR, resultMessage_1.default.DB_ERROR);
-        const data = { dtype };
+        const userServiceInstance = new userService_1.default(models_1.User, models_1.Time, models_1.Item, models_1.UserCategory, logger);
+        const data = yield userServiceInstance.getCategoryInfo((_d = req.user) === null || _d === void 0 ? void 0 : _d.id);
         (0, apiResponse_1.SuccessResponse)(res, resultCode_1.default.OK, resultMessage_1.default.READ_USER_INFO_SUCCESS, data);
     }
     catch (error) {
