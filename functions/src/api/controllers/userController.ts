@@ -4,7 +4,7 @@ import { ErrorResponse, SuccessResponse } from "../../modules/apiResponse";
 import sc from "../../constant/resultCode";
 import rm from "../../constant/resultMessage";
 import Error from "../../constant/responseError";
-import { ResetCategoryDto, UserSetTime, UserSettingDto } from "../../interface/dto/request/userRequest";
+import { ResetCategoryDto, ISetTime, UserSettingDto } from "../../interface/dto/request/userRequest";
 import { UserInfoResponse } from "../../interface/dto/response/userResponse";
 import UserService from "../../services/user/userService";
 const logger = require("../middlewares/logger");
@@ -63,7 +63,7 @@ const getTimeInfo = async (
 
     try {
 
-        const data = await Time.findById(req.user?.id as number) as UserSetTime;
+        const data = await Time.findById(req.user?.id as number) as ISetTime;
         if (!data) return ErrorResponse(res, sc.DB_ERROR, rm.DB_ERROR);
 
 
@@ -85,10 +85,8 @@ const getCategoryInfo = async (
 
     try {
 
-        const dtype = await UserCategory.findCategoryByUserId(req.user?.id as number) as number[];
-        if (!dtype) return ErrorResponse(res, sc.DB_ERROR, rm.DB_ERROR);
-
-        const data = { dtype } as UserInfoResponse;
+        const userServiceInstance = new UserService(User, Time, Item, UserCategory, logger);
+        const data = await userServiceInstance.getCategoryInfo(req.user?.id as number);
 
         SuccessResponse(res, sc.OK, rm.READ_USER_INFO_SUCCESS, data);
 
@@ -137,7 +135,7 @@ const resetTimeInfo = async (
 
     try {
 
-        await Time.updateTime(userId, req.body as UserSetTime);
+        await Time.updateTime(userId, req.body as ISetTime);
         const data = Time.findById(userId);
         SuccessResponse(res, sc.OK, rm.UPDATE_USER_INFO_SUCCESS, await data);
 

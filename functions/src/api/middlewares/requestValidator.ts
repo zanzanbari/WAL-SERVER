@@ -4,7 +4,7 @@ import sc from "../../constant/resultCode";
 import rm from "../../constant/resultMessage";
 import { ErrorResponse } from "../../modules/apiResponse";
 import { SocialType, TokenDto } from "../../interface/dto/request/authRequest";
-import { UserSetTime, UserSettingDto } from "../../interface/dto/request/userRequest";
+import { ISetTime, UserSettingDto } from "../../interface/dto/request/userRequest";
 const logger = require("../../api/middlewares/logger");
 
 // fcmtoken optional 로 한거 개맘에 안드는데,,, isLogin 따로 빼면 코드 중복 개쩔거같고,,, 고민
@@ -96,7 +96,7 @@ const timeRequestCheck = async (
   try {
 
     const bodyError = await timeSchema
-      .validateAsync(req.body as UserSetTime)
+      .validateAsync(req.body as ISetTime)
       .catch(err => { return err; });
 
     if (bodyError.details) {
