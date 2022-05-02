@@ -26,6 +26,11 @@ const sequelize = new sequelize_typescript_1.Sequelize({
     dialect: "postgres",
     logging: false,
     timezone: "+09:00",
+    dialectOptions: {
+        charset: 'utf8mb4',
+        dateStrings: true,
+        typeCast: true
+    }
 });
 sequelize.addModels([
     users_1.default,
