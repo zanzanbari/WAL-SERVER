@@ -21,7 +21,6 @@ const resultMessage_1 = __importDefault(require("../../constant/resultMessage"))
 const kakaoAuthService_1 = __importDefault(require("../../services/auth/kakaoAuthService"));
 const reissueTokenService_1 = __importDefault(require("../../services/auth/reissueTokenService"));
 const logger = require("../middlewares/logger");
-// TODO controller class 만들어서 해도 될듯? 
 const socialLogin = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const { social } = req.params;
     try {

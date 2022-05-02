@@ -15,14 +15,14 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.KakaoUnlinkApi = exports.KakaoAuthApi = void 0;
 const axios_1 = __importDefault(require("axios"));
 const logger = require("../../../api/middlewares/logger");
-function KakaoAuthApi(kakoAccessToken) {
+function KakaoAuthApi(kakaoAccessToken) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
             const apiUrl = "https://kapi.kakao.com/v2/user/me";
             const reqConfig = {
                 headers: {
                     "Content-type": "application/x-www-form-urlencoded;charset=utf-8",
-                    "Authorization": `Bearer ${kakoAccessToken}`
+                    "Authorization": `Bearer ${kakaoAccessToken}`
                 }
             };
             const userData = yield axios_1.default.post(apiUrl, {}, reqConfig)
@@ -36,22 +36,22 @@ function KakaoAuthApi(kakoAccessToken) {
         catch (error) {
             logger.appLogger.log({
                 level: 'error',
-                message: error.message
-            });
-            throw new Error("❌ AXIOS_ERROR ❌");
+                message: error
+            }); // FIXME 이놈은 서버에러인가?? 클라가 잘못된 토큰 보내준거 아닌가 ㅇㅅㅇ
+            throw new Error(`❌ AXIOS_ERROR : ${error.message} ❌`);
         }
     });
 }
 exports.KakaoAuthApi = KakaoAuthApi;
 ;
-function KakaoUnlinkApi(kakoAccessToken) {
+function KakaoUnlinkApi(kakaoAccessToken) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
             const apiUrl = "https://kapi.kakao.com/v1/user/unlink";
             const reqConfig = {
                 headers: {
                     "Content-Type": "application/x-www-form-urlencoded",
-                    "Authorization": `Bearer ${kakoAccessToken}`
+                    "Authorization": `Bearer ${kakaoAccessToken}`
                 }
             };
             const userData = axios_1.default.post(apiUrl, {}, reqConfig);
