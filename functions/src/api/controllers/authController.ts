@@ -11,8 +11,6 @@ import { AuthResponse } from "../../interface/dto/response/authResponse";
 import ReissueTokenService from "../../services/auth/reissueTokenService";
 const logger = require("../middlewares/logger");
 
-// TODO controller class 만들어서 해도 될듯? 
-
 const socialLogin = async (
     req: Request, 
     res: Response, 
