@@ -39,10 +39,8 @@ const socialLogin = (req, res, next) => __awaiter(void 0, void 0, void 0, functi
         return (0, apiResponse_1.SuccessResponse)(res, resultCode_1.default.OK, resultMessage_1.default.LOGIN_SUCCESS, data);
     }
     catch (error) {
-        logger.appLogger.log({
-            level: "error",
-            message: error.message
-        });
+        switch (error.message) {
+        }
         (0, apiResponse_1.ErrorResponse)(res, resultCode_1.default.INTERNAL_SERVER_ERROR, resultMessage_1.default.INTERNAL_SERVER_ERROR);
         return next(error);
     }
@@ -63,10 +61,6 @@ const socialResign = (req, res, next) => __awaiter(void 0, void 0, void 0, funct
         return (0, apiResponse_1.SuccessResponse)(res, resultCode_1.default.OK, resultMessage_1.default.DELETE_USER, data);
     }
     catch (error) {
-        logger.appLogger.log({
-            level: "error",
-            message: error.message
-        });
         (0, apiResponse_1.ErrorResponse)(res, resultCode_1.default.INTERNAL_SERVER_ERROR, resultMessage_1.default.INTERNAL_SERVER_ERROR);
         return next(error);
     }
@@ -83,10 +77,6 @@ const logout = (req, res, next) => __awaiter(void 0, void 0, void 0, function* (
         return (0, apiResponse_1.SuccessResponse)(res, resultCode_1.default.OK, resultMessage_1.default.LOGOUT_SUCCESS, userId);
     }
     catch (error) {
-        logger.appLogger.log({
-            level: "error",
-            message: error.message
-        });
         (0, apiResponse_1.ErrorResponse)(res, resultCode_1.default.INTERNAL_SERVER_ERROR, resultMessage_1.default.INTERNAL_SERVER_ERROR);
         return next(error);
     }
@@ -101,10 +91,6 @@ const reissueToken = (req, res, next) => __awaiter(void 0, void 0, void 0, funct
         return (0, apiResponse_1.SuccessResponse)(res, resultCode_1.default.OK, resultMessage_1.default.REISSUE_TOKEN, data);
     }
     catch (error) {
-        logger.appLogger.log({
-            level: "error",
-            message: error.message
-        });
         (0, apiResponse_1.ErrorResponse)(res, resultCode_1.default.INTERNAL_SERVER_ERROR, resultMessage_1.default.INTERNAL_SERVER_ERROR);
         return next(error);
     }

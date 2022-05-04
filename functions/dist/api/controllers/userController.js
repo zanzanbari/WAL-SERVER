@@ -27,7 +27,6 @@ const setInfo = (req, res, next) => __awaiter(void 0, void 0, void 0, function* 
         (0, apiResponse_1.SuccessResponse)(res, resultCode_1.default.CREATED, resultMessage_1.default.SET_USER_INFO_SUCCESS, data);
     }
     catch (error) {
-        console.error(error);
         (0, apiResponse_1.ErrorResponse)(res, resultCode_1.default.INTERNAL_SERVER_ERROR, resultMessage_1.default.INTERNAL_SERVER_ERROR);
         return next(error);
     }
@@ -47,7 +46,6 @@ const getNicknameInfo = (req, res, next) => __awaiter(void 0, void 0, void 0, fu
         (0, apiResponse_1.SuccessResponse)(res, resultCode_1.default.OK, resultMessage_1.default.READ_USER_INFO_SUCCESS, data);
     }
     catch (error) {
-        logger.appLogger.log({ level: "error", message: error.message });
         (0, apiResponse_1.ErrorResponse)(res, resultCode_1.default.INTERNAL_SERVER_ERROR, resultMessage_1.default.INTERNAL_SERVER_ERROR);
         return next(error);
     }
@@ -61,7 +59,6 @@ const getTimeInfo = (req, res, next) => __awaiter(void 0, void 0, void 0, functi
         (0, apiResponse_1.SuccessResponse)(res, resultCode_1.default.OK, resultMessage_1.default.READ_USER_INFO_SUCCESS, data);
     }
     catch (error) {
-        logger.appLogger.log({ level: "error", message: error.message });
         (0, apiResponse_1.ErrorResponse)(res, resultCode_1.default.INTERNAL_SERVER_ERROR, resultMessage_1.default.INTERNAL_SERVER_ERROR);
         return next(error);
     }
@@ -74,7 +71,6 @@ const getCategoryInfo = (req, res, next) => __awaiter(void 0, void 0, void 0, fu
         (0, apiResponse_1.SuccessResponse)(res, resultCode_1.default.OK, resultMessage_1.default.READ_USER_INFO_SUCCESS, data);
     }
     catch (error) {
-        logger.appLogger.log({ level: "error", message: error.message });
         (0, apiResponse_1.ErrorResponse)(res, resultCode_1.default.INTERNAL_SERVER_ERROR, resultMessage_1.default.INTERNAL_SERVER_ERROR);
         return next(error);
     }
@@ -91,7 +87,6 @@ const resetNicknameInfo = (req, res, next) => __awaiter(void 0, void 0, void 0, 
         (0, apiResponse_1.SuccessResponse)(res, resultCode_1.default.OK, resultMessage_1.default.UPDATE_USER_INFO_SUCCESS, data);
     }
     catch (error) {
-        logger.appLogger.log({ level: "error", message: error.message });
         (0, apiResponse_1.ErrorResponse)(res, resultCode_1.default.INTERNAL_SERVER_ERROR, resultMessage_1.default.INTERNAL_SERVER_ERROR);
         return next(error);
     }
@@ -105,7 +100,6 @@ const resetTimeInfo = (req, res, next) => __awaiter(void 0, void 0, void 0, func
         (0, apiResponse_1.SuccessResponse)(res, resultCode_1.default.OK, resultMessage_1.default.UPDATE_USER_INFO_SUCCESS, yield data);
     }
     catch (error) {
-        logger.appLogger.log({ level: "error", message: error.message });
         (0, apiResponse_1.ErrorResponse)(res, resultCode_1.default.INTERNAL_SERVER_ERROR, resultMessage_1.default.INTERNAL_SERVER_ERROR);
         return next(error);
     }
@@ -118,7 +112,6 @@ const resetUserCategoryInfo = (req, res, next) => __awaiter(void 0, void 0, void
         (0, apiResponse_1.SuccessResponse)(res, resultCode_1.default.OK, resultMessage_1.default.UPDATE_USER_INFO_SUCCESS, data);
     }
     catch (error) {
-        logger.appLogger.log({ level: "error", message: error.message });
         (0, apiResponse_1.ErrorResponse)(res, resultCode_1.default.INTERNAL_SERVER_ERROR, resultMessage_1.default.INTERNAL_SERVER_ERROR);
         return next(error);
     }

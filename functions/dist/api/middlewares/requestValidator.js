@@ -23,7 +23,7 @@ const loginRequestCheck = (req, res, next) => __awaiter(void 0, void 0, void 0, 
         social: joi_1.default.string().required().valid("apple", "kakao"),
     });
     const loginQuerySchema = joi_1.default.object().keys({
-        socialtoken: joi_1.default.string().token().required(),
+        socialtoken: joi_1.default.string().required(),
         fcmtoken: joi_1.default.string().token().optional()
     });
     try {

@@ -70,32 +70,6 @@ const getReservation = (req, res, next) => __awaiter(void 0, void 0, void 0, fun
         }
         pushEachItems(sendingDataItems, sendingData, false);
         pushEachItems(completeDataItems, completeData, true);
-        /*
-        for (const item of sendingDataItems) {
-            const rawDate = item.getDataValue("sendingDate") as Date;
-            const historyMessage = getHistoryDateMessage(rawDate);
-            const sendingDate = historyMessage?.monthDate + " " + historyMessage?.day + historyMessage?.time + " • 전송 예정"
-            sendingData.push({
-                postId: item.id,
-                sendingDate,
-                content: item.getDataValue("content"),
-                reservedAt: dayjs(item.getDataValue("reservedAt")).format("YYYY. MM. DD"),
-                hidden: item.getDataValue("hide")
-            });
-        }
-
-        for (const item of completeDataItems) {
-            const rawDate = item.getDataValue("sendingDate") as Date;
-            const historyMessage = getHistoryDateMessage(rawDate);
-            const sendingDate = historyMessage?.monthDate + " " + historyMessage?.day + historyMessage?.time + " • 전송 완료"
-            completeData.push({
-                postId: item.id,
-                sendingDate,
-                content: item.getDataValue("content"),
-                reservedAt: dayjs(item.getDataValue("reservedAt")).format("YYYY. MM. DD")
-            });
-        }
-        */
         (0, apiResponse_1.SuccessResponse)(res, resultCode_1.default.OK, resultMessage_1.default.READ_RESERVATIONS_SUCCESS, data);
     }
     catch (err) {
@@ -110,8 +84,8 @@ const postReservation = (req, res, next) => __awaiter(void 0, void 0, void 0, fu
         const { content, hide, date, time } = req.body;
         if (!content || hide == undefined || !date || !time)
             return (0, apiResponse_1.ErrorResponse)(res, resultCode_1.default.BAD_REQUEST, resultMessage_1.default.NULL_VALUE);
-        const existingReservation = yield models_1.Reservation.getReservationByDate((_c = req.user) === null || _c === void 0 ? void 0 : _c.id, date);
-        if (existingReservation)
+        const existingDate = yield models_1.Reservation.getReservationByDate((_c = req.user) === null || _c === void 0 ? void 0 : _c.id, date);
+        if (existingDate)
             return (0, apiResponse_1.ErrorResponse)(res, resultCode_1.default.BAD_REQUEST, resultMessage_1.default.INVALID_RESERVATION_DATE);
         const newReservationId = yield models_1.Reservation.postReservation((_d = req.user) === null || _d === void 0 ? void 0 : _d.id, date, time, hide, content);
         const data = { postId: newReservationId };
