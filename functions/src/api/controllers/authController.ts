@@ -36,10 +36,9 @@ const socialLogin = async (
         return SuccessResponse(res, sc.OK, rm.LOGIN_SUCCESS, data);
 
     } catch (error) {
-        logger.appLogger.log({
-            level: "error",
-            message: error.message
-        });
+        switch(error.message) {
+            
+        }
         ErrorResponse(res, sc.INTERNAL_SERVER_ERROR, rm.INTERNAL_SERVER_ERROR);
         return next(error);
     }
@@ -71,10 +70,6 @@ const socialResign = async (
         return SuccessResponse(res, sc.OK, rm.DELETE_USER, data)
 
     } catch (error) {
-        logger.appLogger.log({
-            level: "error",
-            message: error.message
-        });
         ErrorResponse(res, sc.INTERNAL_SERVER_ERROR, rm.INTERNAL_SERVER_ERROR);
         return next(error);
     }
@@ -101,10 +96,6 @@ const logout = async (
         return SuccessResponse(res, sc.OK, rm.LOGOUT_SUCCESS, userId);
 
     } catch (error) {
-        logger.appLogger.log({
-            level: "error",
-            message: error.message
-        });
         ErrorResponse(res, sc.INTERNAL_SERVER_ERROR, rm.INTERNAL_SERVER_ERROR);
         return next(error);
     }
@@ -129,10 +120,6 @@ const reissueToken = async (
         return SuccessResponse(res, sc.OK, rm.REISSUE_TOKEN, data);
 
     } catch (error) {
-        logger.appLogger.log({
-            level: "error",
-            message: error.message
-        });
         ErrorResponse(res, sc.INTERNAL_SERVER_ERROR, rm.INTERNAL_SERVER_ERROR);
         return next(error);
     }

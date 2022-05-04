@@ -3,7 +3,6 @@ import { Item, Time, User, UserCategory } from "../../models";
 import { ErrorResponse, SuccessResponse } from "../../modules/apiResponse";
 import sc from "../../constant/resultCode";
 import rm from "../../constant/resultMessage";
-import Error from "../../constant/responseError";
 import { ResetCategoryDto, ISetTime, UserSettingDto } from "../../interface/dto/request/userRequest";
 import { UserInfoResponse } from "../../interface/dto/response/userResponse";
 import UserService from "../../services/user/userService";
@@ -22,7 +21,6 @@ const setInfo = async (
 
         SuccessResponse(res, sc.CREATED, rm.SET_USER_INFO_SUCCESS,data);
     } catch (error) {
-        console.error(error);
         ErrorResponse(res, sc.INTERNAL_SERVER_ERROR, rm.INTERNAL_SERVER_ERROR);
         return next(error);
     }
@@ -50,7 +48,6 @@ const getNicknameInfo = async (
         SuccessResponse(res, sc.OK, rm.READ_USER_INFO_SUCCESS, data);
 
     } catch (error) {
-        logger.appLogger.log({ level: "error", message: error.message });
         ErrorResponse(res, sc.INTERNAL_SERVER_ERROR, rm.INTERNAL_SERVER_ERROR);
         return next(error);
     }
@@ -72,7 +69,6 @@ const getTimeInfo = async (
         SuccessResponse(res, sc.OK, rm.READ_USER_INFO_SUCCESS, data);
 
     } catch (error) {
-        logger.appLogger.log({ level: "error", message: error.message });
         ErrorResponse(res, sc.INTERNAL_SERVER_ERROR, rm.INTERNAL_SERVER_ERROR);
         return next(error);
     }
@@ -93,7 +89,6 @@ const getCategoryInfo = async (
         SuccessResponse(res, sc.OK, rm.READ_USER_INFO_SUCCESS, data);
 
     } catch (error) {
-        logger.appLogger.log({ level: "error", message: error.message });
         ErrorResponse(res, sc.INTERNAL_SERVER_ERROR, rm.INTERNAL_SERVER_ERROR);
         return next(error);
     }
@@ -119,7 +114,6 @@ const resetNicknameInfo = async (
         SuccessResponse(res, sc.OK, rm.UPDATE_USER_INFO_SUCCESS, data);
 
     } catch (error) {
-        logger.appLogger.log({ level: "error", message: error.message });
         ErrorResponse(res, sc.INTERNAL_SERVER_ERROR, rm.INTERNAL_SERVER_ERROR);
         return next(error);
     }
@@ -142,7 +136,6 @@ const resetTimeInfo = async (
         SuccessResponse(res, sc.OK, rm.UPDATE_USER_INFO_SUCCESS, await data);
 
     } catch (error) {
-        logger.appLogger.log({ level: "error", message: error.message });
         ErrorResponse(res, sc.INTERNAL_SERVER_ERROR, rm.INTERNAL_SERVER_ERROR);
         return next(error);
     }
@@ -164,7 +157,6 @@ const resetUserCategoryInfo = async (
         SuccessResponse(res, sc.OK, rm.UPDATE_USER_INFO_SUCCESS, data);
 
     } catch (error) {
-        logger.appLogger.log({ level: "error", message: error.message });
         ErrorResponse(res, sc.INTERNAL_SERVER_ERROR, rm.INTERNAL_SERVER_ERROR);
         return next(error);
     }
