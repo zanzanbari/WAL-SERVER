@@ -13,13 +13,13 @@ const loginRequestCheck = async (
   res: Response, 
   next: NextFunction
 ) => {
-  
+
   const loginParamSchema = Joi.object().keys({
     social: Joi.string().required().valid("apple", "kakao"),
   });
   const loginQuerySchema = Joi.object().keys({
-    socialtoken: Joi.string().token().required(),
-    fcmtoken: Joi.string().token().optional()
+    socialtoken: Joi.string().required(),
+    fcmtoken: Joi.string().optional()
   });
   
   try {
@@ -36,7 +36,7 @@ const loginRequestCheck = async (
     if ( paramsError.details || queryError.details) { // ( error 에만 존재하는 detail )
       return ErrorResponse(res, sc.BAD_REQUEST, rm.WRONG_PARAMS_OR_NULL);
     }
-
+    
     next();
         
   } catch (error) {
