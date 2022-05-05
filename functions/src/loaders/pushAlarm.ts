@@ -15,7 +15,6 @@ const redisClient=redis.createClient({
 });
 */
 
-
 schedule.scheduleJob('0 0 0 * * *', async () => {
   await TodayWal.destroy();
   await updateTodayWal();

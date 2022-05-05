@@ -16,8 +16,6 @@
     "shell": "npm run build && firebase functions:shell",
     "start": "npm run shell",
     "deploy": "firebase deploy --only functions",
-    "clean:js": "rm -rf ./src/**/*.js",
-    "clean:js.map": "rm -rf ./src/**/*.js.map",
     "logs": "firebase functions:log"
   },
   "engines": {

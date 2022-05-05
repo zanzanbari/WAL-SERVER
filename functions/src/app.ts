@@ -4,40 +4,17 @@ import express from 'express';
 import cookieParser from 'cookie-parser';
 import morgan from 'morgan';
 import cors from 'cors';
-import admin from "firebase-admin";
 import apiRouter from './api/routes';
 import { connectDB } from './loaders/db';
-// import { messageSchedule} from './loaders/notification';
-import Queue, { Job } from "bull";
-// messageSchedule();
-import redis from 'redis';
+import { initFirebase } from "./loaders/firebase";
 
-   
-const messageQueue = new Queue(
-    'message-queue',
-    {redis: {
-        host: 'localhost',
-        port: 6379
-    }}
-  );
-const f = async () => {
-    await messageQueue.add(
-    "data", 
-    {
-      repeat: { cron: `* 2 * * *` }
-    });
-}
-f();
-//initialize firebase inorder to access its services
-admin.initializeApp({
-    credential: admin.credential.cert(
-        require("../key/firebase-admin.json"))
-});
 
 const app = express();
 const logger = require('./api/middlewares/logger');
 const morganFormat = process.env.NODE_ENV !== "production" ? "dev" : "combined";
 
+//initialize firebase inorder to access its services
+initFirebase();
 // db 연결
 connectDB();
   
