@@ -14,11 +14,14 @@ const redisClient=redis.createClient({
     password:process.env.REDIS_PASSWORD
 });
 */
-schedule.scheduleJob('0 0 0 * * *', async () => {
-    await TodayWal.destroy();
-    await updateTodayWal();
 
-})
+
+schedule.scheduleJob('0 0 0 * * *', async () => {
+  await TodayWal.destroy();
+  await updateTodayWal();
+});
+
+
 
 async function getRandCategoryNextItem(user: User) {
 
@@ -57,7 +60,7 @@ async function getRandCategoryNextItem(user: User) {
   });
 
   return nextItemId;
-  
+
 }
 
 async function updateTodayWal() {
@@ -102,89 +105,54 @@ async function updateTodayWal() {
   }
 }
 
+
+//1. 8시마다 todayWal에서 8시의 것 뽑아오기
+async function getTokenMessage(time: Date) {
+    const todayWals = await TodayWal.findAll({
+      where: { time },
+      include: [
+        { model: User, attributes: ["fcmtoken"] }
+      ]
+    });
+
+    for (const wal of todayWals) {
+      const fcmtoken = wal.getDataValue("users").getDataValue("fcmtoken");
+      const userDefined = wal.getDataValue("userDefined");
+      const content = userDefined? wal.getDataValue("reservation_id") : wal.getDataValue("item_id");
+      const data = {
+        fcmtoken,
+        content
+      };
+
+    }
+//자정마다 반복하는 queue
+//이 안에서 ? todayWal에서 뽑아와서,data,time,token
+//해당 시간 큐에 넣어
+//schedule을 통해서 8, 12, 8시 마다 해당 시간큐를,, 실행해
+//이러면 큐로 메시지 관리 편하게 할 수 있다..?
+//->어떻게 하고 싶냐,,,,,,,,
+//특정 시간마다 보낼 친구들이 많은데 완료가 잘 되나 안되나 이걸 보려고 하는 거 아녀??
+//선택해!
+
+//8시마다 반복하는 queue
+//process -> todayWal에서 뽑아서 보내는 작업을,,
+}
+
+
 export const messageQueue = new Queue(
   'message-queue1', {
     redis: { 
-      host: "redis-16916.c74.us-east-1-4.ec2.cloud.redislabs.com", 
-      port: 16916,
-      password: "jTurgwWogsvIg1Gt9QiGdWA6q1dXmznh",
-      username: "default"
+      host: "localhost", 
+      port: 6379
     }
   }
 );
 
-// for문 돌려서 정보들 사악 뽑아주기 => 얘를 12시간에 한번씩 실행시켜주면 되지 않을까?
-async function extractInfo() {
-  const users = await User.findAll({
-    include: [
-      { model: Time, attributes: ["morning", "afternoon", "night"] }, 
-      { model: UserCategory, attributes: ["category_id", "next_item_id"] },
-    ],
-    attributes: ["id", "fcmtoken"]
-  }) as User[];
-
-  for (const user of users) {
-
-    const userId = user.getDataValue("id") as number;
-    const randomIdx = Math.floor(
-      Math.random() * (user.getDataValue("userCategories").length - 1)
-    );
-    const currentItemId = user
-      .getDataValue("userCategories")[randomIdx]
-      .getDataValue("next_item_id");
-
-    const sameCategoryItems = await Item.findAll({
-      where: {
-        category_id: user
-          .getDataValue("userCategories")[randomIdx]
-          .getDataValue("category_id")
-      }
-    }) as Item[];
-
-    const itemValues = sameCategoryItems["dataValues"];
-    const item = itemValues.filter((it: Item) => it.id === currentItemId);
-    const itemIdx = itemValues.indexOf(item);
-    const nextItemId = (itemIdx + 1) % itemValues.length;
-    await UserCategory.update({
-      next_item_id: nextItemId
-    }, {
-      where: {
-        user_id: userId
-      }
-    });
-
-    const fcmToken = user.getDataValue("fcmtoken");
-    const messageContent = await Item.findOne({ where: { id: currentItemId } });
-    const data = {
-      fcmToken,
-      messageContent
-    }
-
-    const selectedTime: number[] = []
-    const times = await Time.findOne({
-        where: { user_id : userId }
-    }) as Time
-
-    if (times["dataValues"]["morning"]) { 
-        selectedTime.push(12)
-    }
-    if (times["dataValues"]["afternoon"]) { 
-      selectedTime.push(14)
-    }
-    if (times["dataValues"]["night"]) {
-      selectedTime.push(20)
-    }
-
-    for (const t in selectedTime) {
-        sendMessage(data, t)
-    }
-
-  }
-
-
+async()=> {
+  const dateString = dayjs(new Date()).format("YYYY-MM-dd")
+  const data = await getTokenMessage(new Date(`${dateString} 08:00:00`));
+  sendMessage(data, new Date(`${dateString} 08:00:00`));
 }
-
-
 
 async function messageProcess (job: Job) { // fcm, contents 꺼내서 메세지 보내주기
     // messageQueue.add 로 추가해준 작업
@@ -199,7 +167,8 @@ async function messageProcess (job: Job) { // fcm, contents 꺼내서 메세지 
     }
 
 }
-  
+
+messageQueue.process(messageProcess);  
 
 const messageToUser = (req: Request, res: Response, message) => {
   admin 
@@ -216,18 +185,13 @@ const messageToUser = (req: Request, res: Response, message) => {
 }
 
 
-messageQueue.process(messageProcess);
-
-
-
-
 
 export async function sendMessage(data, time): Promise<void> {
 
   try {
 
     await messageQueue.add(
-      data, 
+      data,
       {
         repeat: { cron: `* ${time} * * *` }
       });
@@ -240,3 +204,6 @@ export async function sendMessage(data, time): Promise<void> {
   }
 
 }
+
+
+const fcmToken = "fCRwgfoiSUyhtoZ0PrnJze:APA91bHDjRWuGxInIdyxWCIes75vIZjHKp9K8JuGmYmTPNFHQ9i_b_PGnlhZVhCP1VMb0PtiK9xmjA4GqFp8I3qqBN7zd5F8yxUDQzkFpf-R32kdC4r_jUoSIxoSBR1KsOJ4rrjlTSRa";
