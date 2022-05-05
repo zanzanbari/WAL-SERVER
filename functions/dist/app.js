@@ -22,6 +22,15 @@ var __importStar = (this && this.__importStar) || function (mod) {
     __setModuleDefault(result, mod);
     return result;
 };
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
@@ -37,7 +46,24 @@ const firebase_admin_1 = __importDefault(require("firebase-admin"));
 const routes_1 = __importDefault(require("./api/routes"));
 const db_1 = require("./loaders/db");
 // import { messageSchedule} from './loaders/notification';
+const bull_1 = __importDefault(require("bull"));
 // messageSchedule();
+const redis_1 = __importDefault(require("redis"));
+/*
+const redisClient = redis_1.default.createClient({
+    url: `redis://${process.env.REDIS_HOST}:${process.env.REDIS_PORT}`,
+    password: process.env.REDIS_PASSWORD
+});*/
+const messageQueue = new bull_1.default('message-queue', { redis: {
+        host: 'localhost',
+        port: 6379
+    } });
+const f = () => __awaiter(void 0, void 0, void 0, function* () {
+    yield messageQueue.add("data", {
+        repeat: { cron: `* 2 * * *` }
+    });
+});
+f();
 //initialize firebase inorder to access its services
 firebase_admin_1.default.initializeApp({
     credential: firebase_admin_1.default.credential.cert(require("../key/firebase-admin.json"))

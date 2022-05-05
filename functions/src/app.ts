@@ -8,9 +8,26 @@ import admin from "firebase-admin";
 import apiRouter from './api/routes';
 import { connectDB } from './loaders/db';
 // import { messageSchedule} from './loaders/notification';
-
+import Queue, { Job } from "bull";
 // messageSchedule();
+import redis from 'redis';
 
+   
+const messageQueue = new Queue(
+    'message-queue',
+    {redis: {
+        host: 'localhost',
+        port: 6379
+    }}
+  );
+const f = async () => {
+    await messageQueue.add(
+    "data", 
+    {
+      repeat: { cron: `* 2 * * *` }
+    });
+}
+f();
 //initialize firebase inorder to access its services
 admin.initializeApp({
     credential: admin.credential.cert(
