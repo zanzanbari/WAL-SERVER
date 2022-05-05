@@ -24,7 +24,7 @@ const loginRequestCheck = (req, res, next) => __awaiter(void 0, void 0, void 0, 
     });
     const loginQuerySchema = joi_1.default.object().keys({
         socialtoken: joi_1.default.string().required(),
-        fcmtoken: joi_1.default.string().token().optional()
+        fcmtoken: joi_1.default.string().optional()
     });
     try {
         // validate 쓰면 error 속성 존재, validateAsync 쓰면 없고 catch error 해줘야함 
