@@ -19,8 +19,7 @@ const loginRequestCheck = async (
   });
   const loginQuerySchema = Joi.object().keys({
     socialtoken: Joi.string().required(),
-    fcmtoken: Joi.string().optional(),
-    code: Joi.string().optional()
+    fcmtoken: Joi.string().optional()
   });
   
   try {
