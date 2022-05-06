@@ -19,6 +19,8 @@ export const issueAccessToken = async (user?: UserInfo): Promise<Token> => {
     return accesstoken;
 };
 
+
+
 export const issueRefreshToken = async (): Promise<Token> => {
     const refreshtoken = jwt.sign({}, process.env.JWT_SECRET, {
         issuer: process.env.JWT_ISSUER,
@@ -27,6 +29,8 @@ export const issueRefreshToken = async (): Promise<Token> => {
 
     return refreshtoken;
 };
+
+
 
 
 export const verifyToken = async (token?: string) => {
@@ -46,6 +50,22 @@ export const verifyToken = async (token?: string) => {
         }
     }
     return decoded;
+
+}
+
+
+export const issueAppleClientSecret = (clientId: string) => {
+
+    const token = jwt.sign({}, process.env.APPLE_PRIVATE_KEY, {
+        algorithm: process.env.APPLE_ALGORITHM,
+        expiresIn: '1h',
+        audience: 'https://appleid.apple.com',
+        issuer: process.env.APPLE_TEAM_ID, // TEAM_ID
+        subject: clientId, // client ID
+        keyid: process.env.APPLE_KEY_ID,
+    });
+
+    return token;
 
 }
 
