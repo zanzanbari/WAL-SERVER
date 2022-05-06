@@ -24,3 +24,15 @@ export interface IAppleUserInfo extends UserInfo {
     auth_time?: number,
     nonce_supported?: boolean
 }
+
+
+
+export type IApplePublicKeys = IApplePublicKey[];
+interface IApplePublicKey {
+    kty: string,
+    kid: string,
+    use: string,
+    alg: string,
+    n: string,
+    e: string
+};
