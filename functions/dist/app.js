@@ -33,18 +33,14 @@ const express_1 = __importDefault(require("express"));
 const cookie_parser_1 = __importDefault(require("cookie-parser"));
 const morgan_1 = __importDefault(require("morgan"));
 const cors_1 = __importDefault(require("cors"));
-const firebase_admin_1 = __importDefault(require("firebase-admin"));
 const routes_1 = __importDefault(require("./api/routes"));
 const db_1 = require("./loaders/db");
-//initialize firebase inorder to access its services
-firebase_admin_1.default.initializeApp({
-    credential: firebase_admin_1.default.credential.cert(require("../key/firebase-admin.json"))
-});
+const firebase_1 = require("./loaders/firebase");
 const app = (0, express_1.default)();
 const logger = require('./api/middlewares/logger');
 const morganFormat = process.env.NODE_ENV !== "production" ? "dev" : "combined";
-// db 연결
-(0, db_1.connectDB)();
+(0, firebase_1.initFirebase)(); // firebase 연결
+(0, db_1.connectDB)(); // db 연결
 app.use((0, cors_1.default)());
 app.use((0, morgan_1.default)('HTTP/:http-version :method :url :status', {
     stream: logger.httpLogStream

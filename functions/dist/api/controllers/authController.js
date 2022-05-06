@@ -39,11 +39,6 @@ const socialLogin = (req, res, next) => __awaiter(void 0, void 0, void 0, functi
         return (0, apiResponse_1.SuccessResponse)(res, resultCode_1.default.OK, resultMessage_1.default.LOGIN_SUCCESS, data);
     }
     catch (error) {
-<<<<<<< HEAD
-        switch (error.message) {
-        }
-=======
->>>>>>> feat/apple-login
         (0, apiResponse_1.ErrorResponse)(res, resultCode_1.default.INTERNAL_SERVER_ERROR, resultMessage_1.default.INTERNAL_SERVER_ERROR);
         return next(error);
     }

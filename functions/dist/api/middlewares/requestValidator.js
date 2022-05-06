@@ -24,12 +24,8 @@ const loginRequestCheck = (req, res, next) => __awaiter(void 0, void 0, void 0, 
     });
     const loginQuerySchema = joi_1.default.object().keys({
         socialtoken: joi_1.default.string().required(),
-<<<<<<< HEAD
-        fcmtoken: joi_1.default.string().optional()
-=======
         fcmtoken: joi_1.default.string().optional(),
         code: joi_1.default.string().optional()
->>>>>>> feat/apple-login
     });
     try {
         // validate 쓰면 error 속성 존재, validateAsync 쓰면 없고 catch error 해줘야함 

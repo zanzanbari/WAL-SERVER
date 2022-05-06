@@ -61,8 +61,7 @@ const verifyToken = (token) => __awaiter(void 0, void 0, void 0, function* () {
 });
 exports.verifyToken = verifyToken;
 const issueAppleClientSecret = (clientId) => {
-    const appleSecret = "-----BEGIN PRIVATE KEY-----\nMIGTAgEAMBMGByqGSM49AgEGCCqGSM49AwEHBHkwdwIBAQQgO3J8hACISHWp6UFt\nvB08bA9HowBT6jdTHRvwK1fhjkCgCgYIKoZIzj0DAQehRANCAAQ9ll7nvPNwQ+nO\nTtAyIPUEuMB0HvFpwhk33szHrKRPkJ81uUeY12Qk7rz8+JZafis1hHtKUmG6pgOp\nlJfULtmJ\n-----END PRIVATE KEY-----";
-    const token = jsonwebtoken_1.default.sign({}, appleSecret, {
+    const token = jsonwebtoken_1.default.sign({}, process.env.APPLE_PRIVATE_KEY, {
         algorithm: process.env.APPLE_ALGORITHM,
         expiresIn: '1h',
         audience: 'https://appleid.apple.com',
