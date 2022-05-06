@@ -7,9 +7,6 @@ import cors from 'cors';
 import admin from "firebase-admin";
 import apiRouter from './api/routes';
 import { connectDB } from './loaders/db';
-// import { messageSchedule} from './loaders/notification';
-
-// messageSchedule();
 
 //initialize firebase inorder to access its services
 admin.initializeApp({
