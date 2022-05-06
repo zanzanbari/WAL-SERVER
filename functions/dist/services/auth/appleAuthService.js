@@ -1,4 +1,27 @@
 "use strict";
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -8,12 +31,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
-const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
-const appleApi_1 = require("./client/appleApi");
+const jwt = __importStar(require("jsonwebtoken"));
 const tokenHandller_1 = require("../../modules/tokenHandller");
 class AppleAuthService {
     constructor(userRepository, logger) {
@@ -23,26 +42,13 @@ class AppleAuthService {
     login(request) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const { aud: clientId } = jsonwebtoken_1.default.decode(request.socialtoken);
-                console.log("-----------");
-                console.log("client_id : ", clientId);
-                console.log("-----------");
-                const userData = yield (0, appleApi_1.appleAuthApi)(request.code, clientId);
-                console.log("-----------");
-                console.log("userData : ", userData);
-                console.log("-----------");
+                // 결국 해야되는건 -> id_token 받아서 
+                // apple server 공개 키로 jwt 해독 (해야하는데 실패) -> 나중에 다시 시도
+                const payload = jwt.decode(request.socialtoken);
+                const userData = { email: payload.email, nickname: null };
                 const refreshtoken = yield (0, tokenHandller_1.issueRefreshToken)();
-                console.log("-----------");
-                console.log("refreshtoken : ", refreshtoken);
-                console.log("-----------");
                 const socialUser = yield this.userRepository.findByEmailOrCreateSocialUser("kakao", userData, request, refreshtoken);
-                console.log("-----------");
-                console.log("socialUser : ", socialUser);
-                console.log("-----------");
                 const accesstoken = yield (0, tokenHandller_1.issueAccessToken)(socialUser);
-                console.log("-----------");
-                console.log("accesstoken : ", accesstoken);
-                console.log("-----------");
                 const user = {
                     nickname: socialUser.nickname,
                     accesstoken,

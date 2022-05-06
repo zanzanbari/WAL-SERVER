@@ -54,10 +54,10 @@ function KakaoUnlinkApi(kakaoAccessToken) {
                     "Authorization": `Bearer ${kakaoAccessToken}`
                 }
             };
-            const userData = axios_1.default.post(apiUrl, {}, reqConfig);
+            const userData = yield axios_1.default.post(apiUrl, {}, reqConfig);
             logger.httpLogStream.write({
                 level: "info",
-                message: yield userData
+                message: userData
             });
         }
         catch (error) {
@@ -70,4 +70,10 @@ function KakaoUnlinkApi(kakaoAccessToken) {
     });
 }
 exports.KakaoUnlinkApi = KakaoUnlinkApi;
+;
+const kakaoApiUtil = {
+    KakaoAuthApi,
+    KakaoUnlinkApi,
+};
+exports.default = kakaoApiUtil;
 //# sourceMappingURL=kakaoApi.js.map

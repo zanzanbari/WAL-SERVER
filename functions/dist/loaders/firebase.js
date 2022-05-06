@@ -22,7 +22,7 @@ const initFirebase = () => {
     }
     catch (error) {
         logger.appLogger.log({ level: "error", message: error.message });
-        process.exit(1);
+        throw new Error(error.message);
     }
 };
 exports.initFirebase = initFirebase;
