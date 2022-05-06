@@ -18,8 +18,9 @@ const loginRequestCheck = async (
     social: Joi.string().required().valid("apple", "kakao"),
   });
   const loginQuerySchema = Joi.object().keys({
-    socialtoken: Joi.string().token().required(),
-    fcmtoken: Joi.string().token().optional()
+    socialtoken: Joi.string().required(),
+    fcmtoken: Joi.string().optional(),
+    code: Joi.string().optional()
   });
   
   try {
