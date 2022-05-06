@@ -37,13 +37,13 @@ const routes_1 = __importDefault(require("./api/routes"));
 const db_1 = require("./loaders/db");
 const firebase_1 = require("./loaders/firebase");
 const app = (0, express_1.default)();
-const logger = require('./api/middlewares/logger');
+const logger_1 = __importDefault(require("./api/middlewares/logger"));
 const morganFormat = process.env.NODE_ENV !== "production" ? "dev" : "combined";
 (0, firebase_1.initFirebase)(); // firebase 연결
 (0, db_1.connectDB)(); // db 연결
 app.use((0, cors_1.default)());
 app.use((0, morgan_1.default)('HTTP/:http-version :method :url :status', {
-    stream: logger.httpLogStream
+    stream: logger_1.default.httpLogStream
 })); // NOTE: http request 로그 남기기
 app.use(express_1.default.json());
 app.use(express_1.default.urlencoded({ extended: true }));
@@ -58,7 +58,7 @@ app.use("*", (req, res) => {
     });
     //app log 남기기
     const err = new Error(`잘못된 경로입니다.`);
-    logger.appLogger.log({
+    logger_1.default.appLogger.log({
         level: 'error',
         message: err.message
     });

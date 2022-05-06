@@ -18,11 +18,11 @@ const apiResponse_1 = require("../../modules/apiResponse");
 const resultCode_1 = __importDefault(require("../../constant/resultCode"));
 const resultMessage_1 = __importDefault(require("../../constant/resultMessage"));
 const userService_1 = __importDefault(require("../../services/user/userService"));
-const logger = require("../middlewares/logger");
+const logger_1 = __importDefault(require("../middlewares/logger"));
 const setInfo = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     var _a;
     try {
-        const userServiceInstance = new userService_1.default(models_1.User, models_1.Time, models_1.Item, models_1.UserCategory, logger);
+        const userServiceInstance = new userService_1.default(models_1.User, models_1.Time, models_1.Item, models_1.UserCategory, logger_1.default);
         const data = yield userServiceInstance.initSetInfo((_a = req.user) === null || _a === void 0 ? void 0 : _a.id, req.body);
         (0, apiResponse_1.SuccessResponse)(res, resultCode_1.default.CREATED, resultMessage_1.default.SET_USER_INFO_SUCCESS, data);
     }
@@ -66,7 +66,7 @@ const getTimeInfo = (req, res, next) => __awaiter(void 0, void 0, void 0, functi
 const getCategoryInfo = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     var _d;
     try {
-        const userServiceInstance = new userService_1.default(models_1.User, models_1.Time, models_1.Item, models_1.UserCategory, logger);
+        const userServiceInstance = new userService_1.default(models_1.User, models_1.Time, models_1.Item, models_1.UserCategory, logger_1.default);
         const data = yield userServiceInstance.getCategoryInfo((_d = req.user) === null || _d === void 0 ? void 0 : _d.id);
         (0, apiResponse_1.SuccessResponse)(res, resultCode_1.default.OK, resultMessage_1.default.READ_USER_INFO_SUCCESS, data);
     }
@@ -107,7 +107,7 @@ const resetTimeInfo = (req, res, next) => __awaiter(void 0, void 0, void 0, func
 const resetUserCategoryInfo = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     var _g;
     try {
-        const userServiceInstance = new userService_1.default(models_1.User, models_1.Time, models_1.Item, models_1.UserCategory, logger);
+        const userServiceInstance = new userService_1.default(models_1.User, models_1.Time, models_1.Item, models_1.UserCategory, logger_1.default);
         const data = yield userServiceInstance.resetUserCategoryInfo((_g = req.user) === null || _g === void 0 ? void 0 : _g.id, req.body.data);
         (0, apiResponse_1.SuccessResponse)(res, resultCode_1.default.OK, resultMessage_1.default.UPDATE_USER_INFO_SUCCESS, data);
     }

@@ -20,7 +20,7 @@ const resultMessage_1 = __importDefault(require("../../constant/resultMessage"))
 const appleAuthService_1 = __importDefault(require("../../services/auth/appleAuthService"));
 const kakaoAuthService_1 = __importDefault(require("../../services/auth/kakaoAuthService"));
 const reissueTokenService_1 = __importDefault(require("../../services/auth/reissueTokenService"));
-const logger = require("../middlewares/logger");
+const logger_1 = __importDefault(require("../middlewares/logger"));
 const socialLogin = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const { social } = req.params;
     try {
@@ -28,11 +28,11 @@ const socialLogin = (req, res, next) => __awaiter(void 0, void 0, void 0, functi
         switch (social) {
             case "kakao":
                 // TODO: typedi container 써서 logger, repository 주입 - 나중에
-                const kakaoAuthServiceInstance = new kakaoAuthService_1.default(models_1.User, logger);
+                const kakaoAuthServiceInstance = new kakaoAuthService_1.default(models_1.User, logger_1.default);
                 data = yield kakaoAuthServiceInstance.login(req.query);
                 break;
             case "apple":
-                const appleAuthServiceInstance = new appleAuthService_1.default(models_1.User, logger);
+                const appleAuthServiceInstance = new appleAuthService_1.default(models_1.User, logger_1.default);
                 data = yield appleAuthServiceInstance.login(req.query);
                 break;
         }
@@ -50,7 +50,7 @@ const socialResign = (req, res, next) => __awaiter(void 0, void 0, void 0, funct
         let data;
         switch (social) {
             case "kakao":
-                const kakaoAuthServiceInstance = new kakaoAuthService_1.default(models_1.User, logger);
+                const kakaoAuthServiceInstance = new kakaoAuthService_1.default(models_1.User, logger_1.default);
                 data = yield kakaoAuthServiceInstance
                     .resign((_a = req.user) === null || _a === void 0 ? void 0 : _a.id, req.query);
                 break;
@@ -81,7 +81,7 @@ const logout = (req, res, next) => __awaiter(void 0, void 0, void 0, function* (
 });
 const reissueToken = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const reissueTokenServiceInstance = new reissueTokenService_1.default(models_1.User, logger);
+        const reissueTokenServiceInstance = new reissueTokenService_1.default(models_1.User, logger_1.default);
         const data = yield reissueTokenServiceInstance.reissueToken(req.headers);
         if (data === 17 /* TOKEN_EXPIRES */) {
             return (0, apiResponse_1.ErrorResponse)(res, resultCode_1.default.UNAUTHORIZED, resultMessage_1.default.PLEASE_LOGIN_AGAIN);

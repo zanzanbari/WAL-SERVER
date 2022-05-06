@@ -6,7 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.initFirebase = void 0;
 const firebase_admin_1 = __importDefault(require("firebase-admin"));
 const serviceAccount = require("../../key/firebase-admin.json");
-const logger = require("../api/middlewares/logger");
+const logger_1 = __importDefault(require("../api/middlewares/logger"));
 //initialize firebase inorder to access its services
 const initFirebase = () => {
     let firebase;
@@ -21,7 +21,7 @@ const initFirebase = () => {
         }
     }
     catch (error) {
-        logger.appLogger.log({ level: "error", message: error.message });
+        logger_1.default.appLogger.log({ level: "error", message: error.message });
         throw new Error(error.message);
     }
 };

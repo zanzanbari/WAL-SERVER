@@ -17,7 +17,7 @@ const models_1 = require("../../models");
 const apiResponse_1 = require("../../modules/apiResponse");
 const resultCode_1 = __importDefault(require("../../constant/resultCode"));
 const resultMessage_1 = __importDefault(require("../../constant/resultMessage"));
-const logger = require("../middlewares/logger");
+const logger_1 = __importDefault(require("../middlewares/logger"));
 const dayjs_1 = __importDefault(require("dayjs"));
 const dayArr = ["(일)", "(월)", "(화)", "(수)", "(목)", "(금)", "(토)"];
 const getHistoryDateMessage = (rawDate) => {
@@ -38,7 +38,7 @@ const getHistoryDateMessage = (rawDate) => {
         };
     }
     catch (err) {
-        logger.appLogger.log({ level: "error", message: err.message });
+        logger_1.default.appLogger.log({ level: "error", message: err.message });
     }
 };
 const pushEachItems = (Items, DataArr, completed) => {
@@ -52,7 +52,7 @@ const pushEachItems = (Items, DataArr, completed) => {
         }
     }
     catch (err) {
-        logger.appLogger.log({ level: "error", message: err.message });
+        logger_1.default.appLogger.log({ level: "error", message: err.message });
     }
 };
 const getReservation = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
@@ -73,7 +73,7 @@ const getReservation = (req, res, next) => __awaiter(void 0, void 0, void 0, fun
         (0, apiResponse_1.SuccessResponse)(res, resultCode_1.default.OK, resultMessage_1.default.READ_RESERVATIONS_SUCCESS, data);
     }
     catch (err) {
-        logger.appLogger.log({ level: "error", message: err.message });
+        logger_1.default.appLogger.log({ level: "error", message: err.message });
         (0, apiResponse_1.ErrorResponse)(res, resultCode_1.default.INTERNAL_SERVER_ERROR, resultMessage_1.default.INTERNAL_SERVER_ERROR);
         return next(err);
     }
@@ -96,7 +96,7 @@ const postReservation = (req, res, next) => __awaiter(void 0, void 0, void 0, fu
         (0, apiResponse_1.SuccessResponse)(res, resultCode_1.default.OK, resultMessage_1.default.ADD_RESERVATION_SUCCESS, data);
     }
     catch (err) {
-        logger.appLogger.log({ level: "error", message: err.message });
+        logger_1.default.appLogger.log({ level: "error", message: err.message });
         (0, apiResponse_1.ErrorResponse)(res, resultCode_1.default.INTERNAL_SERVER_ERROR, resultMessage_1.default.INTERNAL_SERVER_ERROR);
         return next(err);
     }
@@ -118,7 +118,7 @@ const getReservedDate = (req, res, next) => __awaiter(void 0, void 0, void 0, fu
         (0, apiResponse_1.SuccessResponse)(res, resultCode_1.default.OK, resultMessage_1.default.READ_RESERVED_DATE_SUCCESS, data);
     }
     catch (err) {
-        logger.appLogger.log({ level: "error", message: err.message });
+        logger_1.default.appLogger.log({ level: "error", message: err.message });
         (0, apiResponse_1.ErrorResponse)(res, resultCode_1.default.INTERNAL_SERVER_ERROR, resultMessage_1.default.INTERNAL_SERVER_ERROR);
         return next(err);
     }
@@ -142,7 +142,7 @@ const deleteReservation = (req, res, next) => __awaiter(void 0, void 0, void 0, 
         (0, apiResponse_1.SuccessResponse)(res, resultCode_1.default.OK, resultMessage_1.default.DELETE_RESERVATION_SUCCESS, data);
     }
     catch (err) {
-        logger.appLogger.log({ level: "error", message: err.message });
+        logger_1.default.appLogger.log({ level: "error", message: err.message });
         (0, apiResponse_1.ErrorResponse)(res, resultCode_1.default.INTERNAL_SERVER_ERROR, resultMessage_1.default.INTERNAL_SERVER_ERROR);
         return next(err);
     }
@@ -161,7 +161,7 @@ const deleteCompletedReservation = (req, res, next) => __awaiter(void 0, void 0,
         (0, apiResponse_1.SuccessResponse)(res, resultCode_1.default.OK, resultMessage_1.default.DELETE_COMPLETED_RESERVATION_SUCCESS, data);
     }
     catch (err) {
-        logger.appLogger.log({ level: "error", message: err.message });
+        logger_1.default.appLogger.log({ level: "error", message: err.message });
         (0, apiResponse_1.ErrorResponse)(res, resultCode_1.default.INTERNAL_SERVER_ERROR, resultMessage_1.default.INTERNAL_SERVER_ERROR);
         return next(err);
     }
