@@ -151,7 +151,7 @@ const categoryRequestCheck = async(
     const bodyError = await categorySchema
       .validateAsync(req.body as ISetCategory)
       .catch(err => { return err });
-    console.log("🚀", bodyError);
+
       if (bodyError.details) {
         return ErrorResponse(res, sc.BAD_REQUEST, rm.WRONG_BODY_OR_NULL);
       }
