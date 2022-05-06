@@ -57,7 +57,8 @@ export const verifyToken = async (token?: string) => {
 }
 
 
-
+// public key로 검증하는 함수
+// 검증 성공하면 안에 정보 뽑아서 반환
 // export const verifyAppleIdToken = async (id_token: string) => {
     
 //     try {
