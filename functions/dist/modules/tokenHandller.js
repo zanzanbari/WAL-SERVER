@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.verifyToken = exports.issueRefreshToken = exports.issueAccessToken = void 0;
+exports.issueAppleClientSecret = exports.verifyToken = exports.issueRefreshToken = exports.issueAccessToken = void 0;
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const TOKEN_EXPIRED = -3;
 const TOKEN_INVALID = -2;
@@ -60,4 +60,17 @@ const verifyToken = (token) => __awaiter(void 0, void 0, void 0, function* () {
     return decoded;
 });
 exports.verifyToken = verifyToken;
+const issueAppleClientSecret = (clientId) => {
+    const appleSecret = "-----BEGIN PRIVATE KEY-----\nMIGTAgEAMBMGByqGSM49AgEGCCqGSM49AwEHBHkwdwIBAQQgO3J8hACISHWp6UFt\nvB08bA9HowBT6jdTHRvwK1fhjkCgCgYIKoZIzj0DAQehRANCAAQ9ll7nvPNwQ+nO\nTtAyIPUEuMB0HvFpwhk33szHrKRPkJ81uUeY12Qk7rz8+JZafis1hHtKUmG6pgOp\nlJfULtmJ\n-----END PRIVATE KEY-----";
+    const token = jsonwebtoken_1.default.sign({}, appleSecret, {
+        algorithm: process.env.APPLE_ALGORITHM,
+        expiresIn: '1h',
+        audience: 'https://appleid.apple.com',
+        issuer: process.env.APPLE_TEAM_ID,
+        subject: clientId,
+        keyid: process.env.APPLE_KEY_ID,
+    });
+    return token;
+};
+exports.issueAppleClientSecret = issueAppleClientSecret;
 //# sourceMappingURL=tokenHandller.js.map

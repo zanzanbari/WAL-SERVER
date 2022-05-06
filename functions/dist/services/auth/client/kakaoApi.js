@@ -36,7 +36,7 @@ function KakaoAuthApi(kakaoAccessToken) {
         catch (error) {
             logger.appLogger.log({
                 level: 'error',
-                message: error
+                message: error.message
             }); // FIXME 이놈은 서버에러인가?? 클라가 잘못된 토큰 보내준거 아닌가 ㅇㅅㅇ
             throw new Error(`❌ AXIOS_ERROR : ${error.message} ❌`);
         }
