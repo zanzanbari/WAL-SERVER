@@ -17,7 +17,7 @@ const models_1 = require("../../models");
 const apiResponse_1 = require("../../modules/apiResponse");
 const resultCode_1 = __importDefault(require("../../constant/resultCode"));
 const resultMessage_1 = __importDefault(require("../../constant/resultMessage"));
-// import AppleAuthService from "../../services/auth/appleAuthService";
+const appleAuthService_1 = __importDefault(require("../../services/auth/appleAuthService"));
 const kakaoAuthService_1 = __importDefault(require("../../services/auth/kakaoAuthService"));
 const reissueTokenService_1 = __importDefault(require("../../services/auth/reissueTokenService"));
 const logger = require("../middlewares/logger");
@@ -31,16 +31,19 @@ const socialLogin = (req, res, next) => __awaiter(void 0, void 0, void 0, functi
                 const kakaoAuthServiceInstance = new kakaoAuthService_1.default(models_1.User, logger);
                 data = yield kakaoAuthServiceInstance.login(req.query);
                 break;
-            // case "apple":
-            //     const appleAuthServiceInstance = new AppleAuthService(User);
-            //     data = await appleAuthServiceInstance.login(req.query as TokenDto);
-            //     break;
+            case "apple":
+                const appleAuthServiceInstance = new appleAuthService_1.default(models_1.User, logger);
+                data = yield appleAuthServiceInstance.login(req.query);
+                break;
         }
         return (0, apiResponse_1.SuccessResponse)(res, resultCode_1.default.OK, resultMessage_1.default.LOGIN_SUCCESS, data);
     }
     catch (error) {
+<<<<<<< HEAD
         switch (error.message) {
         }
+=======
+>>>>>>> feat/apple-login
         (0, apiResponse_1.ErrorResponse)(res, resultCode_1.default.INTERNAL_SERVER_ERROR, resultMessage_1.default.INTERNAL_SERVER_ERROR);
         return next(error);
     }

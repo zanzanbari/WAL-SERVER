@@ -4,10 +4,11 @@ export interface TokenDto {
     readonly refreshtoken?: string,
     readonly socialtoken?: string,
     readonly fcmtoken?: string
-}
+    readonly code?: string
+};
 
 // FIXME 리터럴 타입 적용 제대로 안된듯
 type Social = "apple" | "kakao" 
 export interface SocialType {
     readonly social?: Social
-}
+};

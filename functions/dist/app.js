@@ -36,8 +36,6 @@ const cors_1 = __importDefault(require("cors"));
 const firebase_admin_1 = __importDefault(require("firebase-admin"));
 const routes_1 = __importDefault(require("./api/routes"));
 const db_1 = require("./loaders/db");
-// import { messageSchedule} from './loaders/notification';
-// messageSchedule();
 //initialize firebase inorder to access its services
 firebase_admin_1.default.initializeApp({
     credential: firebase_admin_1.default.credential.cert(require("../key/firebase-admin.json"))

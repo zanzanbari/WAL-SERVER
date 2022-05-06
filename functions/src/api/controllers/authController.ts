@@ -4,7 +4,7 @@ import { ErrorResponse, SuccessResponse } from "../../modules/apiResponse";
 import sc from "../../constant/resultCode";
 import rm from "../../constant/resultMessage";
 import Error from "../../constant/responseError";
-// import AppleAuthService from "../../services/auth/appleAuthService";
+import AppleAuthService from "../../services/auth/appleAuthService";
 import KakaoAuthService from "../../services/auth/kakaoAuthService";
 import { TokenDto } from "../../interface/dto/request/authRequest";
 import { AuthResponse } from "../../interface/dto/response/authResponse";
@@ -27,18 +27,15 @@ const socialLogin = async (
                 const kakaoAuthServiceInstance = new KakaoAuthService(User, logger);
                 data = await kakaoAuthServiceInstance.login(req.query as TokenDto);
                 break;
-            // case "apple":
-            //     const appleAuthServiceInstance = new AppleAuthService(User);
-            //     data = await appleAuthServiceInstance.login(req.query as TokenDto);
-            //     break;
+            case "apple":
+                const appleAuthServiceInstance = new AppleAuthService(User, logger);
+                data = await appleAuthServiceInstance.login(req.query as TokenDto);
+                break;
         }
 
         return SuccessResponse(res, sc.OK, rm.LOGIN_SUCCESS, data);
 
     } catch (error) {
-        switch(error.message) {
-            
-        }
         ErrorResponse(res, sc.INTERNAL_SERVER_ERROR, rm.INTERNAL_SERVER_ERROR);
         return next(error);
     }
