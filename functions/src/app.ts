@@ -4,23 +4,17 @@ import express from 'express';
 import cookieParser from 'cookie-parser';
 import morgan from 'morgan';
 import cors from 'cors';
-import admin from "firebase-admin";
 import apiRouter from './api/routes';
 import { connectDB } from './loaders/db';
-
-//initialize firebase inorder to access its services
-admin.initializeApp({
-    credential: admin.credential.cert(
-        require("../key/firebase-admin.json"))
-});
+import { initFirebase } from "./loaders/firebase";
 
 const app = express();
 const logger = require('./api/middlewares/logger');
 const morganFormat = process.env.NODE_ENV !== "production" ? "dev" : "combined";
 
-// db 연결
-connectDB();
-  
+initFirebase(); // firebase 연결
+connectDB(); // db 연결
+
 app.use(cors());
 app.use(morgan('HTTP/:http-version :method :url :status', { 
   stream: logger.httpLogStream 
