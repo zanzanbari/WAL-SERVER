@@ -49,10 +49,10 @@ export async function KakaoUnlinkApi(
             }
         };
 
-        const userData = axios.post(apiUrl, {}, reqConfig);
+        const userData = await axios.post(apiUrl, {}, reqConfig);
         logger.httpLogStream.write({
             level: "info",
-            message: await userData
+            message: userData
         });
 
     } catch (error) {
@@ -62,4 +62,11 @@ export async function KakaoUnlinkApi(
         })
         throw new Error("❌ AXIOS_ERROR ❌");
     }
-}
+};
+
+const kakaoApiUtil = {
+    KakaoAuthApi,
+    KakaoUnlinkApi,
+};
+
+export default kakaoApiUtil;
