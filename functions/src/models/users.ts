@@ -3,7 +3,6 @@ import {
     AutoIncrement, 
     Column, 
     DataType, 
-    Default,
     HasOne,
     HasMany, 
     IsEmail, 

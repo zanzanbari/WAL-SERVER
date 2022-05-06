@@ -1,6 +1,6 @@
 import axios from "axios";
 import { Token, UserInfo } from "../../../interface/dto/response/authResponse";
-const logger = require("../../../api/middlewares/logger");
+import logger from "../../../api/middlewares/logger";
 
 
 export async function KakaoAuthApi(

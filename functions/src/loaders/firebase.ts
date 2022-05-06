@@ -1,6 +1,6 @@
 import admin, { app } from "firebase-admin";
 const serviceAccount = require("../../key/firebase-admin.json")
-const logger = require("../api/middlewares/logger");
+import logger from "../api/middlewares/logger";
 
 //initialize firebase inorder to access its services
 export const initFirebase = () => {

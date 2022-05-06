@@ -9,7 +9,7 @@ import { connectDB } from './loaders/db';
 import { initFirebase } from "./loaders/firebase";
 
 const app = express();
-const logger = require('./api/middlewares/logger');
+import logger from './api/middlewares/logger';
 const morganFormat = process.env.NODE_ENV !== "production" ? "dev" : "combined";
 
 initFirebase(); // firebase 연결

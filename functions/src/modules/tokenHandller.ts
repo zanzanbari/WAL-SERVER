@@ -1,4 +1,3 @@
-import appleApiUtil from "../services/auth/client/appleApi";
 import * as jwt from "jsonwebtoken";
 import { Token, UserInfo } from "../interface/dto/response/authResponse";
 const TOKEN_EXPIRED = -3;

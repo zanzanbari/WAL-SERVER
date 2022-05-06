@@ -2,7 +2,7 @@ import jwt from "jsonwebtoken";
 import qs from "qs";
 import { IApplePublicKeys, IAppleUserInfo, Token } from "../../../interface/dto/response/authResponse";
 import axios from "axios";
-const logger = require("../../../api/middlewares/logger");
+import logger from "../../../api/middlewares/logger";
 
 // apple public key 가져오는 함수
 export async function getPublicKey(): Promise<IApplePublicKeys> {

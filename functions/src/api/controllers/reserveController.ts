@@ -7,7 +7,7 @@ import rm from "../../constant/resultMessage";
 //import {  } from "../../interface/dto/request/reserveRequest";
 //import {  } from "../../interface/dto/response/reserveResponse";
 import ReserveService from "../../services/user/userService";
-const logger = require("../middlewares/logger");
+import logger from "../middlewares/logger";
 import dayjs from "dayjs";
 
 const dayArr = ["(일)","(월)","(화)","(수)","(목)","(금)","(토)"];

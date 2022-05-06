@@ -6,7 +6,7 @@ import rm from "../../constant/resultMessage";
 import { ResetCategoryDto, ISetTime, UserSettingDto } from "../../interface/dto/request/userRequest";
 import { UserInfoResponse } from "../../interface/dto/response/userResponse";
 import UserService from "../../services/user/userService";
-const logger = require("../middlewares/logger");
+import logger from "../middlewares/logger";
 
 const setInfo = async (
     req: Request,
