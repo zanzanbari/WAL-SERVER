@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.updateToday = exports.messageQueue = exports.nightQueue = exports.afternoonQueue = exports.morningQueue = void 0;
+exports.updateTodayWal = exports.updateToday = exports.messageQueue = exports.nightQueue = exports.afternoonQueue = exports.morningQueue = void 0;
 const models_1 = require("../../models");
 const bull_1 = __importDefault(require("bull"));
 const dayjs_1 = __importDefault(require("dayjs"));
@@ -44,9 +44,10 @@ exports.messageQueue = new bull_1.default('message-queue', {
 });
 function updateToday() {
     node_schedule_1.default.scheduleJob('0 0 0 * * *', () => __awaiter(this, void 0, void 0, function* () {
-        yield models_1.TodayWal.destroy(
-            {where: {},
-            truncate: true});
+        yield models_1.TodayWal.destroy({
+            where: {},
+            truncate: true
+        });
         yield updateTodayWal();
     }));
 }
@@ -54,6 +55,7 @@ exports.updateToday = updateToday;
 function updateTodayWal() {
     return __awaiter(this, void 0, void 0, function* () {
         const users = yield models_1.User.findAll({
+            where: {id:1},/////////////////////////////////////////////
             include: [
                 { model: models_1.Time, attributes: ["morning", "afternoon", "night"] },
                 { model: models_1.UserCategory, attributes: ["category_id", "next_item_id"] },
@@ -63,19 +65,20 @@ function updateTodayWal() {
         for (const user of users) {
             const userId = user.getDataValue("id");
             const selectedTime = [];
-            const times = user.getDataValue("times");
-            const dateString = (0, dayjs_1.default)(new Date()).format("YYYY-MM-dd");
-            if (times["dataValues"]["morning"]) { //8
+            const times = user.getDataValue("time");
+            const dateString = (0, dayjs_1.default)(new Date()).format("YYYY-MM-DD");
+            console.log(dateString)
+            if (times.getDataValue("morning")) { //8
                 selectedTime.push(new Date(`${dateString} 08:00:00`));
             }
-            if (times["dataValues"]["afternoon"]) { //12
+            if (times.getDataValue("afternoon")) { //12
                 selectedTime.push(new Date(`${dateString} 12:00:00`));
             }
-            if (times["dataValues"]["night"]) { //20
+            if (times.getDataValue("night")) { //20
                 selectedTime.push(new Date(`${dateString} 20:00:00`));
             }
-            for (const t in selectedTime) {
-                const nextItemId = yield getRandCategoryNextItem(user);
+            for (const t of selectedTime) {
+                const nextItemId = yield getRandCategoryCurrentItem(user);
                 yield models_1.TodayWal.create({
                     user_id: userId,
                     item_id: nextItemId,
@@ -85,7 +88,8 @@ function updateTodayWal() {
         }
     });
 }
-function getRandCategoryNextItem(user) {
+exports.updateTodayWal = updateTodayWal;
+function getRandCategoryCurrentItem(user) {
     return __awaiter(this, void 0, void 0, function* () {
         const userId = user.getDataValue("id");
         //가진 카테고리 중 하나 선택
@@ -102,10 +106,15 @@ function getRandCategoryNextItem(user) {
                 category_id
             }
         });
-        const itemValues = sameCategoryItems["dataValues"];
-        const item = itemValues.filter((it) => it.id === currentItemId);
-        const itemIdx = itemValues.indexOf(item);
-        const nextItemId = (itemIdx + 1) % itemValues.length;
+        let itemIdx, nextItemId;
+        console.log(currentItemId)
+        for (const item of sameCategoryItems) {
+            console.log(item)
+            if (item.getDataValue("id") === currentItemId) {
+                itemIdx = sameCategoryItems.indexOf(item);
+                nextItemId = (itemIdx + 1) % sameCategoryItems.length;
+            }
+        }
         yield models_1.UserCategory.update({
             next_item_id: nextItemId
         }, {
@@ -114,7 +123,7 @@ function getRandCategoryNextItem(user) {
                 category_id
             }
         });
-        return nextItemId;
+        return currentItemId;
     });
 }
 //# sourceMappingURL=index.js.map

@@ -51,7 +51,7 @@ export function updateToday() {
   });
 }
 
-async function updateTodayWal() {
+export async function updateTodayWal() {
     const users = await User.findAll({
     include: [
         { model: Time, attributes: ["morning", "afternoon", "night"] }, 
@@ -61,37 +61,35 @@ async function updateTodayWal() {
     }) as User[];
 
     for (const user of users) {
-
         const userId = user.getDataValue("id") as number;
 
         const selectedTime: Date[] = []
 
-        const times = user.getDataValue("times");
-        const dateString = dayjs(new Date()).format("YYYY-MM-dd")
-        if (times["dataValues"]["morning"]) { //8
+        const times = user.getDataValue("time");
+        const dateString = dayjs(new Date()).format("YYYY-MM-DD")
+        if (times.getDataValue("morning")) { //8
             selectedTime.push(new Date(`${dateString} 08:00:00`))
         }
-        if (times["dataValues"]["afternoon"]) { //12
+        if (times.getDataValue("afternoon")) { //12
             selectedTime.push(new Date(`${dateString} 12:00:00`))
         }
-        if (times["dataValues"]["night"]) { //20
+        if (times.getDataValue("night")) { //20
             selectedTime.push(new Date(`${dateString} 20:00:00`))
         }
 
-        for (const t in selectedTime) {
-            const nextItemId = await getRandCategoryNextItem(user);
+        for (const t of selectedTime) {
+            const currentItemId = await getRandCategoryCurrentItem(user);
 
             await TodayWal.create({
                 user_id: userId,
-                item_id: nextItemId,
+                item_id: currentItemId,
                 time: t
             })
         }
     }
 }
   
-
-async function getRandCategoryNextItem(user: User) {
+async function getRandCategoryCurrentItem(user: User) {
 
     const userId = user.getDataValue("id") as number;
     //가진 카테고리 중 하나 선택
@@ -113,10 +111,14 @@ async function getRandCategoryNextItem(user: User) {
       }
     }) as Item[];
   
-    const itemValues = sameCategoryItems["dataValues"];
-    const item = itemValues.filter((it: Item) => it.id === currentItemId);
-    const itemIdx = itemValues.indexOf(item);
-    const nextItemId = (itemIdx + 1) % itemValues.length;
+
+    let itemIdx, nextItemId;
+       for(const item of sameCategoryItems) {
+           if (item.getDataValue("id") === currentItemId) {
+               itemIdx = sameCategoryItems.indexOf(item);
+               nextItemId = (itemIdx + 1) % sameCategoryItems.length;
+           }
+       }
   
     await UserCategory.update({
       next_item_id: nextItemId
@@ -127,6 +129,6 @@ async function getRandCategoryNextItem(user: User) {
       }
     });
   
-    return nextItemId;
+    return currentItemId;
   
   }
