@@ -17,7 +17,7 @@ const morganFormat = process.env.NODE_ENV !== "production" ? "dev" : "combined";
 initFirebase(); // firebase 연결
 connectDB(); // db 연결
 updateToday(); //자정마다 todayWal 업데이트
-addUserTime(1);
+addUserTime(1);/////////////////////////
 
 app.use(cors());
 app.use(morgan('HTTP/:http-version :method :url :status', { 
