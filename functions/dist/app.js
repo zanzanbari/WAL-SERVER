@@ -36,11 +36,15 @@ const cors_1 = __importDefault(require("cors"));
 const routes_1 = __importDefault(require("./api/routes"));
 const db_1 = require("./loaders/db");
 const firebase_1 = require("./loaders/firebase");
+const pushAlarm_1 = require("./services/pushAlarm");
+const producer_1 = require("./services/pushAlarm/producer");
 const app = (0, express_1.default)();
 const logger_1 = __importDefault(require("./api/middlewares/logger"));
 const morganFormat = process.env.NODE_ENV !== "production" ? "dev" : "combined";
 (0, firebase_1.initFirebase)(); // firebase 연결
 (0, db_1.connectDB)(); // db 연결
+(0, pushAlarm_1.updateToday)(); //자정마다 todayWal 업데이트
+(0, producer_1.addUserTime)(1);
 app.use((0, cors_1.default)());
 app.use((0, morgan_1.default)('HTTP/:http-version :method :url :status', {
     stream: logger_1.default.httpLogStream
