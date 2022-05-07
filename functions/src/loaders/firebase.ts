@@ -1,23 +1,19 @@
-import admin, { app } from "firebase-admin";
-const serviceAccount = require("../../key/firebase-admin.json")
-import logger from "../api/middlewares/logger";
+import * as admin from "firebase-admin";
+const serviceAccount = require("../../key/firebase-admin.json");
+
 
 //initialize firebase inorder to access its services
 export const initFirebase = () => {
 
-  let firebase: app.App;
-  try {
-
-    if (admin.apps.length === 0) {
-      firebase = admin.initializeApp({
-        credential: admin.credential.cert(serviceAccount)
-      });
-    } else {
-      firebase = admin.app();
-    }
-
-  } catch (error) {
-    logger.appLogger.log({ level: "error", message: error.message });
-    throw new Error(error.message);
+  let firebase: admin.app.App;
+  if (admin.apps.length === 0) {
+  
+    firebase = admin.initializeApp({
+      credential: admin.credential.cert(serviceAccount),
+    });
+  
+  } else {
+    firebase = admin.app();
   }
+
 }

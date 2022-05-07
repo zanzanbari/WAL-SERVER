@@ -6,6 +6,7 @@ import Item from './items';
 import Time from './times';
 import Reservation from './reservations';
 import UserCategory from './userCategories';
+import TodayWal from './todayWals';
 
 const sequelize = new Sequelize({
     host: dbConfig.development.host,
@@ -28,7 +29,8 @@ sequelize.addModels([
     UserCategory,
     Item,
     Time,
-    Reservation
+    Reservation,
+    TodayWal
 ]);
 
 export {
@@ -37,7 +39,8 @@ export {
     UserCategory,
     Item,
     Time,
-    Reservation
+    Reservation,
+    TodayWal
 };
 
 export default sequelize;
