@@ -13,6 +13,7 @@ exports.addUserTime = void 0;
 const models_1 = require("../../models");
 const _1 = require("./");
 const logger = require("../../api/middlewares/logger");
+const consumer_1 = require("./consumer");
 function addUserTime(userId) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
@@ -24,20 +25,24 @@ function addUserTime(userId) {
                 yield _1.morningQueue.add(userId, {
                     repeat: { cron: `* 8 * * *` }
                 });
+                yield _1.morningQueue.process(consumer_1.morningFunc);
             }
             if (times.afternoon) {
-                yield _1.afternoonQueue.add(userId, {
-                    repeat: { cron: `* 12 * * *` }
+                const addjob = yield _1.afternoonQueue.add(userId, {
+                //repeat: { cron: `* 12 * * *` } ////////////////////////////////////
                 });
+                console.log(addjob.finished());
+                yield _1.afternoonQueue.process(consumer_1.afterFunc);
             }
             if (times.night) {
                 yield _1.nightQueue.add(userId, {
                     repeat: { cron: `* 20 * * *` }
                 });
             }
+            yield _1.nightQueue.process(consumer_1.nightFunc);
         }
         catch (err) {
-            logger.appLogger.log({ level: "error", message: err.message });
+            console.log({ level: "error", message: err.message });
         }
     });
 }

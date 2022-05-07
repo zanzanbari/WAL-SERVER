@@ -55,7 +55,6 @@ exports.updateToday = updateToday;
 function updateTodayWal() {
     return __awaiter(this, void 0, void 0, function* () {
         const users = yield models_1.User.findAll({
-            where: {id:1},/////////////////////////////////////////////
             include: [
                 { model: models_1.Time, attributes: ["morning", "afternoon", "night"] },
                 { model: models_1.UserCategory, attributes: ["category_id", "next_item_id"] },
@@ -67,7 +66,6 @@ function updateTodayWal() {
             const selectedTime = [];
             const times = user.getDataValue("time");
             const dateString = (0, dayjs_1.default)(new Date()).format("YYYY-MM-DD");
-            console.log(dateString)
             if (times.getDataValue("morning")) { //8
                 selectedTime.push(new Date(`${dateString} 08:00:00`));
             }
@@ -78,10 +76,10 @@ function updateTodayWal() {
                 selectedTime.push(new Date(`${dateString} 20:00:00`));
             }
             for (const t of selectedTime) {
-                const nextItemId = yield getRandCategoryCurrentItem(user);
+                const currentItemId = yield getRandCategoryCurrentItem(user);
                 yield models_1.TodayWal.create({
                     user_id: userId,
-                    item_id: nextItemId,
+                    item_id: currentItemId,
                     time: t
                 });
             }
@@ -107,9 +105,7 @@ function getRandCategoryCurrentItem(user) {
             }
         });
         let itemIdx, nextItemId;
-        console.log(currentItemId)
         for (const item of sameCategoryItems) {
-            console.log(item)
             if (item.getDataValue("id") === currentItemId) {
                 itemIdx = sameCategoryItems.indexOf(item);
                 nextItemId = (itemIdx + 1) % sameCategoryItems.length;

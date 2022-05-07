@@ -18,7 +18,7 @@ initFirebase(); // firebase 연결
 connectDB(); // db 연결
 updateToday(); //자정마다 todayWal 업데이트
 //updateTodayWal(); ///////////////////////updatetodayWal테스트용
-//addUserTime(1);/////////////////////////1번 유저만 가입 시뮬
+addUserTime(1);/////////////////////////1번 유저만 가입 시뮬
 
 app.use(cors());
 app.use(morgan('HTTP/:http-version :method :url :status', { 

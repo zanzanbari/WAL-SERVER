@@ -2,7 +2,7 @@ import { Time } from "../../models";
 import { morningQueue, afternoonQueue, nightQueue } from './';
 
 const logger = require("../../api/middlewares/logger");
-
+import {morningFunc, afterFunc, nightFunc} from './consumer';
 
 export async function addUserTime(userId): Promise<void> {
 
@@ -18,13 +18,17 @@ export async function addUserTime(userId): Promise<void> {
                 {
                 repeat: { cron: `* 8 * * *` }
                 });
+            
+            await morningQueue.process(morningFunc)
         } 
         if (times.afternoon) {
-            await afternoonQueue.add(
+            const addjob = await afternoonQueue.add(
                 userId,
                 {
                 repeat: { cron: `* 12 * * *` }
                 });
+            console.log(addjob.finished());
+            await afternoonQueue.process(afterFunc)
         } 
         if (times.night) {
             await nightQueue.add(
@@ -33,9 +37,10 @@ export async function addUserTime(userId): Promise<void> {
                 repeat: { cron: `* 20 * * *` }
                 });
             }
-            
-    } catch (err) {
-        logger.appLogger.log({ level: "error", message: err.message });
+            await nightQueue.process(nightFunc)
+
+    }  catch (err) {
+        console.log({ level: "error", message: err.message });
     }
     
 }

@@ -12,28 +12,33 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const _1 = require("./");
+exports.messageFunc = void 0;
 const firebase_admin_1 = __importDefault(require("firebase-admin"));
 const logger = require("../../api/middlewares/logger");
-_1.messageQueue.process((job) => __awaiter(void 0, void 0, void 0, function* () {
-    const { fcmtoken, content } = job.data;
-    let message = {
-        notification: {
-            title: '왈소리 와써💛',
-            body: content,
-        },
-        token: fcmtoken,
-    };
-    firebase_admin_1.default
-        .messaging()
-        .send(message)
-        .then(function (response) {
-        console.log('Successfully sent message: : ', response);
-        logger.appLogger.log({ level: "info", message: response });
-    })
-        .catch(function (err) {
-        console.log('Error Sending message!!! : ', err);
-        logger.appLogger.log({ level: "error", message: err.message });
-    });
-}));
+const messageFunc = (job, done) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const { fcmtoken, content } = job.data;
+        let message = {
+            notification: {
+                title: '왈소리 와써💛',
+                body: content,
+            },
+            token: fcmtoken,
+        };
+        firebase_admin_1.default
+            .messaging()
+            .send(message)
+            .then(function (response) {
+            console.log('Successfully sent message: : ', response);
+        })
+            .catch(function (err) {
+            console.log('Error Sending message!!! : ', err);
+        });
+        done();
+    }
+    catch (err) {
+        console.log({ level: "error", message: err.message });
+    }
+});
+exports.messageFunc = messageFunc;
 //# sourceMappingURL=messageConsumer.js.map

@@ -12,28 +12,34 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.nightFunc = exports.afterFunc = exports.morningFunc = void 0;
 const models_1 = require("../../models");
 const _1 = require("./");
 const dayjs_1 = __importDefault(require("dayjs"));
+const messageConsumer_1 = require("./messageConsumer");
 const logger = require("../../api/middlewares/logger");
 function getTokenMessage(time, userId) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
             const wal = yield models_1.TodayWal.findOne({
-                where: { time, user_id: userId },
+                where: { time: time, user_id: userId },
                 include: [
                     { model: models_1.User, attributes: ["fcmtoken"] }
                 ]
             });
-            const fcmtoken = wal === null || wal === void 0 ? void 0 : wal.getDataValue("users").getDataValue("fcmtoken");
+            const fcmtoken = wal === null || wal === void 0 ? void 0 : wal.getDataValue("user").getDataValue("fcmtoken");
             const userDefined = wal === null || wal === void 0 ? void 0 : wal.getDataValue("userDefined");
             let content = "";
             if (userDefined) {
-                const reservation = yield models_1.Reservation.findOne({ where: { id: wal === null || wal === void 0 ? void 0 : wal.getDataValue("reservation_id") } });
+                const reservation = yield models_1.Reservation.findOne({
+                    where: { id: wal === null || wal === void 0 ? void 0 : wal.getDataValue("reservation_id") }
+                });
                 content = reservation === null || reservation === void 0 ? void 0 : reservation.content;
             }
             else {
-                const item = yield models_1.Item.findOne({ where: { id: wal === null || wal === void 0 ? void 0 : wal.getDataValue("item_id") } });
+                const item = yield models_1.Item.findOne({
+                    where: { id: wal === null || wal === void 0 ? void 0 : wal.getDataValue("item_id") }
+                });
                 content = item === null || item === void 0 ? void 0 : item.content;
             }
             const data = {
@@ -43,34 +49,60 @@ function getTokenMessage(time, userId) {
             return data;
         }
         catch (err) {
-            logger.appLogger.log({ level: "error", message: err.message });
+            console.log({ level: "error", message: err.message });
         }
     });
 }
-_1.morningQueue.process((job) => __awaiter(void 0, void 0, void 0, function* () {
-    const { userId } = job.data;
-    //userId-> FCM, 랜덤 카테고리에서 다음 메시지 가져옴
-    //data : { fcm, content }
-    const dateString = (0, dayjs_1.default)(new Date()).format("YYYY-MM-dd");
-    const data = yield getTokenMessage(new Date(`${dateString} 08:00:00`), userId);
-    _1.messageQueue.add(data, {
-        attempts: 5
-    });
-}));
-_1.afternoonQueue.process((job) => __awaiter(void 0, void 0, void 0, function* () {
-    const { userId } = job.data;
-    const dateString = (0, dayjs_1.default)(new Date()).format("YYYY-MM-dd");
-    const data = yield getTokenMessage(new Date(`${dateString} 12:00:00`), userId);
-    _1.messageQueue.add(data, {
-        attempts: 5
-    });
-}));
-_1.nightQueue.process((job) => __awaiter(void 0, void 0, void 0, function* () {
-    const { userId } = job.data;
-    const dateString = (0, dayjs_1.default)(new Date()).format("YYYY-MM-dd");
-    const data = yield getTokenMessage(new Date(`${dateString} 20:00:00`), userId);
-    _1.messageQueue.add(data, {
-        attempts: 5
-    });
-}));
+const morningFunc = (job, done) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const userId = job.data;
+        const dateString = (0, dayjs_1.default)(new Date()).format("YYYY-MM-DD");
+        const data = yield getTokenMessage(new Date(`${dateString} 08:00:00`), userId);
+        // data : { fcm, content }
+        const addjob = yield _1.messageQueue.add(data, {
+            attempts: 5
+        });
+        console.log(addjob.finished());
+        yield _1.messageQueue.process(messageConsumer_1.messageFunc);
+        done();
+    }
+    catch (err) {
+        console.log({ level: "error", message: err.message });
+    }
+});
+exports.morningFunc = morningFunc;
+const afterFunc = (job, done) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const userId = job.data;
+        const dateString = (0, dayjs_1.default)(new Date()).format("YYYY-MM-DD");
+        const data = yield getTokenMessage(new Date(`${dateString} 12:00:00`), userId);
+        const addjob = yield _1.messageQueue.add(data, {
+            attempts: 5
+        });
+        console.log(addjob.finished());
+        yield _1.messageQueue.process(messageConsumer_1.messageFunc);
+        done();
+    }
+    catch (err) {
+        console.log({ level: "error", message: err.message });
+    }
+});
+exports.afterFunc = afterFunc;
+const nightFunc = (job, done) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const userId = job.data;
+        const dateString = (0, dayjs_1.default)(new Date()).format("YYYY-MM-DD");
+        const data = yield getTokenMessage(new Date(`${dateString} 20:00:00`), userId);
+        const addjob = yield _1.messageQueue.add(data, {
+            attempts: 5
+        });
+        console.log(addjob.finished());
+        yield _1.messageQueue.process(messageConsumer_1.messageFunc);
+        done();
+    }
+    catch (err) {
+        console.log({ level: "error", message: err.message });
+    }
+});
+exports.nightFunc = nightFunc;
 //# sourceMappingURL=consumer.js.map

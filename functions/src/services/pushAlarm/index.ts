@@ -1,5 +1,5 @@
 import { Item, Time, User, UserCategory, TodayWal } from "../../models";
-import Queue, { Job } from "bull";
+import Queue from "bull";
 import dayjs from "dayjs";
 import schedule from 'node-schedule';
 
