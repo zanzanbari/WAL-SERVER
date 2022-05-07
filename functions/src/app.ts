@@ -7,8 +7,7 @@ import cors from 'cors';
 import apiRouter from './api/routes';
 import { connectDB } from './loaders/db';
 import { initFirebase } from "./loaders/firebase";
-import { updateToday, updateTodayWal } from "./services/pushAlarm";
-import { addUserTime } from "./services/pushAlarm/producer";
+import { updateToday } from "./services/pushAlarm";
 
 const app = express();
 import logger from './api/middlewares/logger';
@@ -17,8 +16,6 @@ const morganFormat = process.env.NODE_ENV !== "production" ? "dev" : "combined";
 initFirebase(); // firebase 연결
 connectDB(); // db 연결
 updateToday(); //자정마다 todayWal 업데이트
-//updateTodayWal(); ///////////////////////updatetodayWal테스트용
-addUserTime(1);/////////////////////////1번 유저만 가입 시뮬
 
 app.use(cors());
 app.use(morgan('HTTP/:http-version :method :url :status', { 

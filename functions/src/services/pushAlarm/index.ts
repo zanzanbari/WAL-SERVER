@@ -112,13 +112,14 @@ async function getRandCategoryCurrentItem(user: User) {
     }) as Item[];
   
 
-    let itemIdx, nextItemId;
-       for(const item of sameCategoryItems) {
-           if (item.getDataValue("id") === currentItemId) {
-               itemIdx = sameCategoryItems.indexOf(item);
-               nextItemId = (itemIdx + 1) % sameCategoryItems.length;
-           }
-       }
+    let itemIdx, nextItemIdx, nextItemId;
+    for(const item of sameCategoryItems) {
+        if (item.getDataValue("id") === currentItemId) {
+            itemIdx = sameCategoryItems.indexOf(item); //배열상 인덱스
+            nextItemIdx = (itemIdx + 1) % sameCategoryItems.length; //배열상 인덱스
+            nextItemId = sameCategoryItems[nextItemIdx].getDataValue("id"); //테이블 상 id
+        }
+    }
   
     await UserCategory.update({
       next_item_id: nextItemId

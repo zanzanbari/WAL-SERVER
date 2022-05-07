@@ -55,11 +55,12 @@ exports.updateToday = updateToday;
 function updateTodayWal() {
     return __awaiter(this, void 0, void 0, function* () {
         const users = yield models_1.User.findAll({
+            where: {id:1}, 
             include: [
                 { model: models_1.Time, attributes: ["morning", "afternoon", "night"] },
                 { model: models_1.UserCategory, attributes: ["category_id", "next_item_id"] },
             ],
-            attributes: ["id"]
+            attributes: ["id"] 
         });
         for (const user of users) {
             const userId = user.getDataValue("id");
@@ -104,11 +105,14 @@ function getRandCategoryCurrentItem(user) {
                 category_id
             }
         });
-        let itemIdx, nextItemId;
+        let itemIdx, nextItemIdx, nextItemId;
+        console.log(sameCategoryItems);
         for (const item of sameCategoryItems) {
             if (item.getDataValue("id") === currentItemId) {
-                itemIdx = sameCategoryItems.indexOf(item);
-                nextItemId = (itemIdx + 1) % sameCategoryItems.length;
+                itemIdx = sameCategoryItems.indexOf(item); //배열상 인덱스
+                console.log(itemIdx);
+                nextItemIdx = (itemIdx + 1) % sameCategoryItems.length; //배열상 인덱스
+                nextItemId = sameCategoryItems[nextItemIdx].getDataValue("id"); //테이블 상 id
             }
         }
         yield models_1.UserCategory.update({

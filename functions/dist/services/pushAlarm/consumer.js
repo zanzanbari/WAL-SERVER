@@ -59,10 +59,9 @@ const morningFunc = (job, done) => __awaiter(void 0, void 0, void 0, function* (
         const dateString = (0, dayjs_1.default)(new Date()).format("YYYY-MM-DD");
         const data = yield getTokenMessage(new Date(`${dateString} 08:00:00`), userId);
         // data : { fcm, content }
-        const addjob = yield _1.messageQueue.add(data, {
+        yield _1.messageQueue.add(data, {
             attempts: 5
         });
-        console.log(addjob.finished());
         yield _1.messageQueue.process(messageConsumer_1.messageFunc);
         done();
     }
@@ -76,10 +75,9 @@ const afterFunc = (job, done) => __awaiter(void 0, void 0, void 0, function* () 
         const userId = job.data;
         const dateString = (0, dayjs_1.default)(new Date()).format("YYYY-MM-DD");
         const data = yield getTokenMessage(new Date(`${dateString} 12:00:00`), userId);
-        const addjob = yield _1.messageQueue.add(data, {
+        yield _1.messageQueue.add(data, {
             attempts: 5
         });
-        console.log(addjob.finished());
         yield _1.messageQueue.process(messageConsumer_1.messageFunc);
         done();
     }
@@ -93,10 +91,9 @@ const nightFunc = (job, done) => __awaiter(void 0, void 0, void 0, function* () 
         const userId = job.data;
         const dateString = (0, dayjs_1.default)(new Date()).format("YYYY-MM-DD");
         const data = yield getTokenMessage(new Date(`${dateString} 20:00:00`), userId);
-        const addjob = yield _1.messageQueue.add(data, {
+        yield _1.messageQueue.add(data, {
             attempts: 5
         });
-        console.log(addjob.finished());
         yield _1.messageQueue.process(messageConsumer_1.messageFunc);
         done();
     }
